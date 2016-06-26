@@ -5,6 +5,7 @@ class FY3AVirrProvider(DataProvider):
 
     __HdfOperator = HdfOperator()
 
+    __fileName = None
 
     __filehandel=None
 
@@ -17,6 +18,9 @@ class FY3AVirrProvider(DataProvider):
     def SetFile(self,file):
 
         self.__filehandel = self.__HdfOperator.Open(file)
+
+    def GetFile(self):
+        return  self.__fileName
 
 
     def Longitude(self):
@@ -33,4 +37,4 @@ class FY3AVirrProvider(DataProvider):
         return self.__RefData[band,:,:]
 
     def GetResolution(self):
-        return 500
+        return 900

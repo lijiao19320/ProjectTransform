@@ -26,3 +26,7 @@ class DataProvider(object):
     @abstractmethod
     def EmissData(self,band):
         pass
+
+    @abstractmethod
+    def GetFile(self):
+        pass

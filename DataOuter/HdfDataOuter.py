@@ -23,7 +23,7 @@ class HdfDataOuter(DataOuter):
         savefile = '/mnt/hgfs/Vmware Linux/Data/save.hdf'
         if os.path.exists(savefile):
             os.remove(savefile)
-        refdata = self.__dataProvider.RefData(1)
+        refdata = self.__dataProvider.RefData(0)
         savdData=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,refdata)
 
 
@@ -36,8 +36,8 @@ class HdfDataOuter(DataOuter):
         return
 
     def CalProjectMinMax(self,U,V):
-        maskU = (U[:,:]< 99999999)
-        maskV = (V[:,:]< 99999999)
+        maskU = (U[:,:]< 999999999)
+        maskV = (V[:,:]< 999999999)
 
         RealU = U[maskU]
         RealV = V[maskV]
@@ -56,12 +56,12 @@ class HdfDataOuter(DataOuter):
         return Height,Width
 
     def CreateSaveData(self,minU, minV,width,height,U,V,resolution,refdata):
-        saveData = N.ones((height,width))*65535
+        saveData = N.ones((height,width))*400
         UVshape = U.shape
-
+        resolutionFactor = float(1)/float(resolution)
         for i in range(UVshape[0]):
             for j in range(UVshape[1]):
-                posX = int((U[i,j]-minU)/resolution)
-                posY = int((V[i,j]-minV)/resolution)
+                posX = int((U[i,j]-minU)*resolutionFactor)
+                posY = int((V[i,j]-minV)*resolutionFactor)
                 saveData[posY,posX] = refdata[i,j]
         return saveData

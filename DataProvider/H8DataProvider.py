@@ -5,6 +5,7 @@ class H8Dataprovider(DataProvider):
     __HdfOperator = HdfOperator()
     __latFile = ''
     __lonFile = ''
+    __fileName = None
 
     def __init__(self):
         super(H8Dataprovider,self).__init__()
@@ -31,3 +32,6 @@ class H8Dataprovider(DataProvider):
 
     def EmissData(self,band):
         return
+
+    def GetFile(self):
+        return  self.__fileName

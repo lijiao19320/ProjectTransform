@@ -13,7 +13,7 @@ provider = FY3AVirrProvider()
 provider.SetFile(file)
 
 param = ProjParameters()
-param.DstProj = Proj(proj='lcc',datum='WGS84')
+param.DstProj = Proj(proj='merc',datum='WGS84')
 
 dataouter = HdfDataOuter()
 
