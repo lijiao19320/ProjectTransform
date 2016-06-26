@@ -18,15 +18,18 @@ class HdfDataOuter(DataOuter):
         self.__dataProvider = dataProvider
 
         minU, minV, maxU, maxV=self.CalProjectMinMax(U,V)
-        Height, Width = self.CalProjectWidthAndHeight( minU, minV, maxU, maxV,self.__dataProvider.GetResolution())
+        resolution =self.__dataProvider.GetResolution()
+        Height, Width = self.CalProjectWidthAndHeight( minU, minV, maxU, maxV,resolution)
         savefile = '/mnt/hgfs/Vmware Linux/Data/save.hdf'
         if os.path.exists(savefile):
             os.remove(savefile)
         refdata = self.__dataProvider.RefData(1)
-        self.CreateSaveData(minU, minV,Width,Height,U,V,refdata)
+        savdData=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,refdata)
 
 
         fileHandle = self.__HdfOperator.Open(savefile)
+        self.__HdfOperator.WriteHdfDataset(fileHandle, 'tt', 'org', refdata)
+        self.__HdfOperator.WriteHdfDataset(fileHandle, 'tt', 'Ref', savdData)
         self.__HdfOperator.WriteHdfDataset(fileHandle, 'tt', 'U', U)
         self.__HdfOperator.WriteHdfDataset(fileHandle, 'tt', 'V', V)
         self.__HdfOperator.Close(fileHandle)
@@ -47,13 +50,18 @@ class HdfDataOuter(DataOuter):
     def CalProjectWidthAndHeight(self,minU,minV,maxU,maxV,resolution):
 
 
-        Height = (maxV- minV) / resolution+ 0.5
-        Width = (maxU- minU) / resolution+ 0.5
+        Height = round((maxV- minV) / resolution+ 0.5)
+        Width = round((maxU- minU) / resolution+ 0.5)
 
         return Height,Width
 
-    def CreateSaveData(self,minU, minV,width,height,resolution,U,V,refdata):
-        saveData = N.zeros((height,width))
+    def CreateSaveData(self,minU, minV,width,height,U,V,resolution,refdata):
+        saveData = N.ones((height,width))*65535
+        UVshape = U.shape
 
-        print saveData
-        return
+        for i in range(UVshape[0]):
+            for j in range(UVshape[1]):
+                posX = int((U[i,j]-minU)/resolution)
+                posY = int((V[i,j]-minV)/resolution)
+                saveData[posY,posX] = refdata[i,j]
+        return saveData
