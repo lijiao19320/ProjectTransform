@@ -37,4 +37,4 @@ class FY3AVirrProvider(DataProvider):
         return self.__RefData[band,:,:]
 
     def GetResolution(self):
-        return 900
+        return 1000

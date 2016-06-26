@@ -3,13 +3,14 @@ from DataProvider.H8DataProvider import *
 from DataProvider.FY3AVirrProvider import *
 from ProjProcessor import *
 
-# convert awips221 grid to awips218 coordinate system
-# (grids defined at http://www.nco.ncep.noaa.gov/pmb/docs/on388/tableb.html)
-file = '/mnt/hgfs/Vmware Linux/Data/FY3A_VIRRX_GBAL_L1_20090427_0255_1000M_MS.HDF'
-# file.append('/mnt/hgfs/Vmware Linux/Data/fygatNAV.Himawari08.xxxxxxx.000002.hdf')
 
-# provider = H8Dataprovider()
-provider = FY3AVirrProvider()
+# file = '/mnt/hgfs/Vmware Linux/Data/FY3A_VIRRX_GBAL_L1_20090427_0255_1000M_MS.HDF'
+file = ['/mnt/hgfs/Vmware Linux/Data/fygatNAV.Himawari08.xxxxxxx.000001.hdf']
+file.append('/mnt/hgfs/Vmware Linux/Data/fygatNAV.Himawari08.xxxxxxx.000002.hdf')
+file.append('/mnt/hgfs/Vmware Linux/Data/AHI8_OBI_4000M_NOM_20160414_1900.hdf')
+
+provider = H8Dataprovider()
+# provider = FY3AVirrProvider()
 provider.SetFile(file)
 
 param = ProjParameters()
