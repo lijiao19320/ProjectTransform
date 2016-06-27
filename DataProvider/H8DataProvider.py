@@ -1,5 +1,6 @@
 from DataProvider import *
 from HdfOperator import *
+import numpy as N
 
 class H8Dataprovider(DataProvider):
     __HdfOperator = HdfOperator()
@@ -20,15 +21,20 @@ class H8Dataprovider(DataProvider):
 
 
     def Longitude(self):
-        return self.__HdfOperator.ReadHdfDataset(self.__lonFileHandle, '/', 'Lon')
+        lon= N.array(self.__HdfOperator.ReadHdfDataset(self.__lonFileHandle, '/', 'Lon'))
+        self.__HdfOperator.Close(self.__lonFileHandle)
+        return lon
 
 
 
     def Latitude(self):
-        return self.__HdfOperator.ReadHdfDataset(self.__latFileHandle, '/', 'Lat')
+        lat=N.array(self.__HdfOperator.ReadHdfDataset(self.__latFileHandle, '/', 'Lat'))
+
+        self.__HdfOperator.Close(self.__latFileHandle)
+        return lat
 
     def GetResolution(self):
-        return 4000
+        return 8000
 
     def RefData(self,band):
         bandname = ''

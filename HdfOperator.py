@@ -22,7 +22,7 @@ class HdfOperator(object):
         #     os.remove(filePath)
 
         hdfgroup = fileHandle.require_group(groupPath)
-        hdfDataset = hdfgroup.create_dataset(datasetName,data=dataset)
+        hdfgroup.create_dataset(datasetName,data=dataset)
 
 
     def Close(self,hdfFile):

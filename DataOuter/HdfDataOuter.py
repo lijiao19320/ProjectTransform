@@ -76,5 +76,5 @@ class HdfDataOuter(DataOuter):
 
                 posX = tu[i,j]
                 posY = tv[i,j]
-                # saveData[posY,posX] = refdata[i,j]
+                saveData[posY,posX] = refdata[i,j]
         return saveData
