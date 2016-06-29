@@ -16,7 +16,7 @@ class ProjTransformer(object):
             # projUV = dstproj(lon[:]*self.DEG2RAD, lat[:]*self.DEG2RAD)l
             U,V = self.ProjectTransform(lon[:]*self.DEG2RAD,lat[:]*self.DEG2RAD,srcProj,dstproj)
         elif lon.ndim == 2:
-            # projUV = dstproj(lon[:, :] * self.DEG2RAD, lat[:, :] * self.DEG2RAD)
+            # projUV = dstproj(lon[:, :] * self.DEG2RAD, lat[:, :] * self.DEG2RAD)l
             U, V = self.ProjectTransform(lon[:, :] * self.DEG2RAD, lat[:, :]* self.DEG2RAD, srcProj, dstproj)
 
         return U,V

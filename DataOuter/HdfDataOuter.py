@@ -69,6 +69,7 @@ class HdfDataOuter(DataOuter):
 
         icount = UVshape[0]
         jcount = UVshape[1]
+
         for i in range(icount):
             for j in range(jcount):
                 if (maskU[i,j] != True):
@@ -77,4 +78,5 @@ class HdfDataOuter(DataOuter):
                 posX = tu[i,j]
                 posY = tv[i,j]
                 saveData[posY,posX] = refdata[i,j]
+
         return saveData
