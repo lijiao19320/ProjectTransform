@@ -48,6 +48,26 @@ class HdfDataOuter(DataOuter):
         maxV = N.max(RealV[:])
         return  minU,minV,maxU,maxV,maskU,maskV
 
+    def LonLatBox(self, lat, lon):
+        masklat = (lat[:,:] <= 90) & (lat[:,:]>=-90)
+        masklon = (lon[:, :] <= 180) & (lon[:, :] >= -180)
+        latitude = lat[masklat]
+        longitude = lon[masklon]
+
+        minlat = N.min(latitude)
+        minlon = N.min(longitude)
+        maxlat  = N.max(latitude)
+        maxlon = N.max(longitude)
+
+        print minlat,minlon,maxlat,maxlon
+
+        lon = N.array([minlon,minlon,maxlon,maxlon])
+        lat = N.array([maxlat,minlat,maxlat,minlat])
+        proj = self.__ProjParam.DstProj
+        boxUV = self.__ProjTransformer.LatlonToProjUV(lon, lat, proj)
+
+        print  boxUV
+
     def CalProjectWidthAndHeight(self,minU,minV,maxU,maxV,resolution):
 
 
