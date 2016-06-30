@@ -8,10 +8,10 @@ class H8Dataprovider(DataProvider):
     __lonFileHandle = None
     __DataFileHandle = None
     __fileName = None
-    __minlat = None
-    __maxlat = None
-    __minlon = None
-    __maxlon = None
+    __minlat = 999
+    __maxlat = 999
+    __minlon = 999
+    __maxlon = 999
 
     def __init__(self):
         super(H8Dataprovider,self).__init__()
@@ -27,6 +27,8 @@ class H8Dataprovider(DataProvider):
     def Longitude(self):
         lon= N.array(self.__HdfOperator.ReadHdfDataset(self.__lonFileHandle, '/', 'Lon'))
         self.__HdfOperator.Close(self.__lonFileHandle)
+
+
         return lon
 
 
@@ -35,6 +37,13 @@ class H8Dataprovider(DataProvider):
         lat=N.array(self.__HdfOperator.ReadHdfDataset(self.__latFileHandle, '/', 'Lat'))
 
         self.__HdfOperator.Close(self.__latFileHandle)
+
+        if self.__minlat!=999 & self.__maxlat!=999:
+            rangeIndex = N.where((self.__minlat<=lat) & (lat<=self.__maxlat))
+            start = N.min(rangeIndex[:][0])
+            end = N.max(rangeIndex[:][0])
+            return lat[start:end,:]
+
         return lat
 
     def GetResolution(self):

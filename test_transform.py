@@ -11,7 +11,7 @@ file.append('/mnt/hgfs/Vmware Linux/Data/AHI8_OBI_4000M_NOM_20160414_0500.hdf')
 provider = H8Dataprovider()
 # provider = FY3AVirrProvider()
 provider.SetFile(file)
-
+provider.SetRange(20,60,0,0)
 param = ProjParameters()
 param.DstProj = Proj(proj='merc',datum='WGS84',lon_0=145,x_0=50000,y_0=50000)
 
