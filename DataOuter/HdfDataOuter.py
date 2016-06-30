@@ -2,6 +2,7 @@ from DataOuter import *
 from HdfOperator import *
 from DataProvider.DataProvider import *
 import numpy as N
+import cos_module_np as SD
 
 class HdfDataOuter(DataOuter):
 
@@ -77,7 +78,7 @@ class HdfDataOuter(DataOuter):
         return Height,Width
 
     def CreateSaveData(self,minU, minV,width,height,U,V,resolution,refdata,maskU,maskV):
-        saveData = N.ones((height,width))*400
+        # saveData = N.ones((height,width))*400
         UVshape = U.shape
         resolutionFactor = float(1)/float(resolution)
         ru = U*resolutionFactor
@@ -87,16 +88,18 @@ class HdfDataOuter(DataOuter):
         tu = (ru-minUF).astype(int)
         tv = (rv-minVF).astype(int)
 
-        icount = UVshape[0]
-        jcount = UVshape[1]
+        # icount = UVshape[0]
+        # jcount = UVshape[1]
 
-        for i in range(icount):
-            for j in range(jcount):
-                if (maskU[i,j] != True):
-                    continue
+        saveData = SD.cos_func_np(int(width), int(height), tu, tv, refdata)
 
-                posX = tu[i,j]
-                posY = tv[i,j]
-                saveData[posY,posX] = refdata[i,j]
+        # for i in range(icount):
+        #     for j in range(jcount):
+        #         if (maskU[i,j] != True):
+        #             continue
+        #
+        #         posX = tu[i,j]
+        #         posY = tv[i,j]
+        #         saveData[posY,posX] = refdata[i,j]
 
         return saveData
