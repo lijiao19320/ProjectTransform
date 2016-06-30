@@ -30,13 +30,10 @@ class ProjProcessor(object):
     def PerformProj(self):
         lat = self.__dataProvider.Latitude()
         lon = self.__dataProvider.Longitude()
-        resolution = self.__dataProvider.GetResolution()
-        # minlat, maxlat, minlon, maxlon=self.LonLatBox(lat, lon)
-        # self.CalProjectWidthAndHeight(minlat,maxlat,minlon,maxlon,self.__resolution)
-        # self.LonLatBox(lat,lon)
+
         proj = self.__ProjParam.DstProj
         U, V = self.__ProjTransformer.LatlonToProjUV(lon,lat,proj)
-        # self.CalProjectWidthAndHeight(U,V, resolution)
+
         self.__dataOut.Save(U,V,self.__dataProvider)
 
 

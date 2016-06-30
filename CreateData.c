@@ -32,32 +32,51 @@ static PyObject* cos_func_np(PyObject* self, PyObject* args)
       //datasave = (npy_int32*)   PyArray_DATA(in_array_savedata);
 
     npy_intp dims[2] = {height,width};
-    PyObject *savedata = PyArray_SimpleNew(2, dims, NPY_FLOAT);
+
+    PyObject *savedata = PyArray_SimpleNew(2, dims, NPY_INT);
+//    PyObject *savedata = PyArray_EMPTY(2, dims, NPY_FLOAT,0);
     PyArrayIterObject *save_iter;
     save_iter = (PyArrayIterObject *)PyArray_IterNew(savedata);
+
+    int index = 0;
+    int count = width*height;
+
+    for(index = 0;index<count;index++)
+    {
+            int * out_savedataptr = (int *)save_iter->dataptr;
+           *(out_savedataptr) = 400;
+           PyArray_ITER_NEXT(save_iter);
+    }
+
     int i =0;
-    int j =0;
+   // int j =0;
     for( i =0 ;i < tu_iter->size;i++)
      {
        // for( j = 0;j<in_iter->size;j++)
         {
 
-            PyArray_ITER_NEXT(tu_iter);
-            PyArray_ITER_NEXT(tv_iter);
-            PyArray_ITER_NEXT(ref_iter);
+
             int * tudataptr = (int *)tu_iter->dataptr;
             int * tvdataptr = (int *)tv_iter->dataptr;
-            if(*(tudataptr)>999999999)
-                continue;
-           // printf("%d,%d\n",*(tudataptr)-1,*(tvdataptr)-1);
+//            if(*(tudataptr)< 0 || *(tudataptr)> 99999)
+//            {
+//               // *(out_savedataptr) = 400;
+//                continue;
+//            }
 
-            float * refdataptr = (float *)ref_iter->dataptr;
+            //printf("%d,%d\n",*(tudataptr),*(tvdataptr));
+
+            int * refdataptr = (int *)ref_iter->dataptr;
 
             npy_intp savedatadim[2] = {*(tvdataptr),*(tudataptr)};
 
             PyArray_ITER_GOTO(save_iter,savedatadim);
-           float * out_savedataptr = (float *)save_iter->dataptr;
+           int * out_savedataptr = (int *)save_iter->dataptr;
            *(out_savedataptr) = *(refdataptr);
+
+            PyArray_ITER_NEXT(tu_iter);
+            PyArray_ITER_NEXT(tv_iter);
+            PyArray_ITER_NEXT(ref_iter);
           // PyArray_ITER_NEXT(save_iter);
             //savedata[i*width+j]->dataptr = 1;
             //

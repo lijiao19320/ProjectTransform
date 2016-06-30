@@ -8,6 +8,10 @@ class H8Dataprovider(DataProvider):
     __lonFileHandle = None
     __DataFileHandle = None
     __fileName = None
+    __minlat = None
+    __maxlat = None
+    __minlon = None
+    __maxlon = None
 
     def __init__(self):
         super(H8Dataprovider,self).__init__()
@@ -34,7 +38,7 @@ class H8Dataprovider(DataProvider):
         return lat
 
     def GetResolution(self):
-        return 8000
+        return 4000
 
     def RefData(self,band):
         bandname = ''
@@ -48,7 +52,9 @@ class H8Dataprovider(DataProvider):
             bandname = 'NOMChannelVIS0230_4000'
 
         if bandname!='':
-            return self.__HdfOperator.ReadHdfDataset(self.__DataFileHandle, '/', bandname)
+
+            data=self.__HdfOperator.ReadHdfDataset(self.__DataFileHandle, '/', bandname)
+            return data[:,:]
 
         return None
 
@@ -57,3 +63,10 @@ class H8Dataprovider(DataProvider):
 
     def GetFile(self):
         return  self.__fileName
+
+    def SetRange(self,minlat,maxlat,minlon,maxlon):
+        self.__minlat = minlat
+        self.__maxlat = maxlat
+        self.__minlon = minlon
+        self.__maxlon = maxlon
+        return

@@ -32,8 +32,8 @@ class HdfDataOuter(DataOuter):
         fileHandle = self.__HdfOperator.Open(savefile)
 
         self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'EVB_Ref', savdData)
-        # self.__HdfOperator.WriteHdfDataset(fileHandle, 'tt', 'U', U)
-        # self.__HdfOperator.WriteHdfDataset(fileHandle, 'tt', 'V', V)
+        self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'U', U)
+        self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'V', V)
         self.__HdfOperator.Close(fileHandle)
         return
 
@@ -48,26 +48,26 @@ class HdfDataOuter(DataOuter):
         maxU = N.max(RealU[:])
         maxV = N.max(RealV[:])
         return  minU,minV,maxU,maxV,maskU,maskV
-
-    def LonLatBox(self, lat, lon):
-        masklat = (lat[:,:] <= 90) & (lat[:,:]>=-90)
-        masklon = (lon[:, :] <= 180) & (lon[:, :] >= -180)
-        latitude = lat[masklat]
-        longitude = lon[masklon]
-
-        minlat = N.min(latitude)
-        minlon = N.min(longitude)
-        maxlat  = N.max(latitude)
-        maxlon = N.max(longitude)
-
-        print minlat,minlon,maxlat,maxlon
-
-        lon = N.array([minlon,minlon,maxlon,maxlon])
-        lat = N.array([maxlat,minlat,maxlat,minlat])
-        proj = self.__ProjParam.DstProj
-        boxUV = self.__ProjTransformer.LatlonToProjUV(lon, lat, proj)
-
-        print  boxUV
+    #
+    # def LonLatBox(self, lat, lon):
+    #     masklat = (lat[:,:] <= 90) & (lat[:,:]>=-90)
+    #     masklon = (lon[:, :] <= 180) & (lon[:, :] >= -180)
+    #     latitude = lat[masklat]
+    #     longitude = lon[masklon]
+    #
+    #     minlat = N.min(latitude)
+    #     minlon = N.min(longitude)
+    #     maxlat  = N.max(latitude)
+    #     maxlon = N.max(longitude)
+    #
+    #     print minlat,minlon,maxlat,maxlon
+    #
+    #     lon = N.array([minlon,minlon,maxlon,maxlon])
+    #     lat = N.array([maxlat,minlat,maxlat,minlat])
+    #     proj = self.__ProjParam.DstProj
+    #     boxUV = self.__ProjTransformer.LatlonToProjUV(lon, lat, proj)
+    #
+    #     print  boxUV
 
     def CalProjectWidthAndHeight(self,minU,minV,maxU,maxV,resolution):
 
@@ -91,7 +91,7 @@ class HdfDataOuter(DataOuter):
         # icount = UVshape[0]
         # jcount = UVshape[1]
 
-        saveData = SD.cos_func_np(int(width), int(height), tu, tv, refdata)
+        saveData = SD.cos_func_np(int(width), int(height), tu, tv, refdata.astype(int))
 
         # for i in range(icount):
         #     for j in range(jcount):
@@ -101,5 +101,8 @@ class HdfDataOuter(DataOuter):
         #         posX = tu[i,j]
         #         posY = tv[i,j]
         #         saveData[posY,posX] = refdata[i,j]
+
+        # print N.max(refdata),N.min(refdata)
+        # savemask = (saveData[:,:]==0)
 
         return saveData

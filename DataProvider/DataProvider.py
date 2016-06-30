@@ -30,3 +30,7 @@ class DataProvider(object):
     @abstractmethod
     def GetFile(self):
         pass
+
+    @abstractmethod
+    def SetRange(self,minlat,maxlat,minlon,maxlon):
+        pass
