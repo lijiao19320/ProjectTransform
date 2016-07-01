@@ -24,6 +24,8 @@ class HdfOperator(object):
         hdfgroup = fileHandle.require_group(groupPath)
         hdfgroup.create_dataset(datasetName,data=dataset)
 
+    def WriteHdfAttribute(self):
+        return 
 
     def Close(self,hdfFile):
         hdfFile.close()

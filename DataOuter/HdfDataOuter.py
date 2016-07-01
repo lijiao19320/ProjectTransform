@@ -66,6 +66,10 @@ class HdfDataOuter(DataOuter):
         return
 
 
+    def WriteAttribute(self):
+
+        return
+
 
     def CalProjectMinMax(self,U,V):
         maskU = (U[:,:]< 999999999)
