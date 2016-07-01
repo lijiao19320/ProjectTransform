@@ -11,13 +11,12 @@ class FY3AVirrProvider(DataProvider):
 
     __RefData = None
 
-    __minlat = None
-    __maxlat = None
-    __minlon = None
-    __maxlon = None
 
     def __init__(self):
         super(FY3AVirrProvider,self).__init__()
+        return
+
+    def Dispose(self):
         return
 
     def SetFile(self,file):
@@ -36,6 +35,18 @@ class FY3AVirrProvider(DataProvider):
     def Latitude(self):
         return self.__HdfOperator.ReadHdfDataset(self.__filehandel, '/', 'Latitude')
 
+    def SensorAzimuth(self):
+        return
+
+    def SensorZenith(self):
+        return
+
+    def SolarAzimuth(self):
+        return
+
+    def SolarZenith(self):
+        return
+
     def RefData(self,band):
         if self.__RefData == None:
             self.__RefData = self.__HdfOperator.ReadHdfDataset(self.__filehandel, '/', 'EV_RefSB')
@@ -45,8 +56,5 @@ class FY3AVirrProvider(DataProvider):
         return 1000
 
     def SetRange(self,minlat,maxlat,minlon,maxlon):
-        self.__minlat = minlat
-        self.__maxlat = maxlat
-        self.__minlon = minlon
-        self.__maxlon = maxlon
+
         return

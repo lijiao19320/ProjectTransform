@@ -4,6 +4,7 @@ from DataProvider.DataProvider import *
 import numpy as N
 import cos_module_np as SD
 
+
 class HdfDataOuter(DataOuter):
 
     __HdfOperator = HdfOperator()
@@ -21,21 +22,50 @@ class HdfDataOuter(DataOuter):
         minU, minV, maxU, maxV,maskU,maskV=self.CalProjectMinMax(U,V)
         resolution =self.__dataProvider.GetResolution()
         Height, Width = self.CalProjectWidthAndHeight( minU, minV, maxU, maxV,resolution)
-        savefile = '/mnt/hgfs/Vmware Linux/Data/save.hdf'
-        if os.path.exists(savefile):
-            os.remove(savefile)
+        savefilePath = self.__dataProvider.GetFile()
+
+        savePath,saveFile =  os.path.split(savefilePath)
+        saveFile = saveFile.upper()
+        saveFile=saveFile.replace('.HDF','Proj.HDF')
+
+        savefilePath = savePath+'/'+saveFile
+        if os.path.exists(savefilePath):
+            os.remove(savefilePath)
+
+        fileHandle = self.__HdfOperator.Open(savefilePath)
 
         refdata = self.__dataProvider.RefData(0)
-        savdData=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,refdata,maskU,maskV)
+        if refdata != None:
+            savdrefData=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,refdata)
+            self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'EVB_Ref', savdrefData)
+
+        sensorAzimuthdata = self.__dataProvider.SensorAzimuth()
+        if sensorAzimuthdata!=None:
+            savesensorAzimuthdata=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,sensorAzimuthdata)
+            self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'SensorAzimuth', savesensorAzimuthdata)
+
+        sensorZenithdata = self.__dataProvider.SensorZenith()
+        if sensorZenithdata!=None:
+            savesensorZenithdata=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,sensorZenithdata)
+            self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'SensorZenith', savesensorZenithdata)
+
+        solarAzimuthdata = self.__dataProvider.SolarAzimuth()
+        if solarAzimuthdata!=None:
+            savesolarAzimuthdata=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,solarAzimuthdata)
+            self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'SolarAzimuth', savesolarAzimuthdata)
 
 
-        fileHandle = self.__HdfOperator.Open(savefile)
+        solarZenithdata = self.__dataProvider.SolarZenith()
+        if solarZenithdata!=None:
+            savesoarZenithdata=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,solarZenithdata)
+            self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'SolarZenith', savesoarZenithdata)
 
-        self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'EVB_Ref', savdData)
-        self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'U', U)
-        self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'V', V)
+        # self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'U', U)
+        # self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'V', V)
         self.__HdfOperator.Close(fileHandle)
         return
+
+
 
     def CalProjectMinMax(self,U,V):
         maskU = (U[:,:]< 999999999)
@@ -77,7 +107,7 @@ class HdfDataOuter(DataOuter):
 
         return Height,Width
 
-    def CreateSaveData(self,minU, minV,width,height,U,V,resolution,refdata,maskU,maskV):
+    def CreateSaveData(self,minU, minV,width,height,U,V,resolution,refdata):
         # saveData = N.ones((height,width))*400
         UVshape = U.shape
         resolutionFactor = float(1)/float(resolution)

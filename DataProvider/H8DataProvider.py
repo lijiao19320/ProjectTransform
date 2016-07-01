@@ -8,13 +8,22 @@ class H8Dataprovider(DataProvider):
     __lonFileHandle = None
     __DataFileHandle = None
     __fileName = None
-    __minlat = 999
-    __maxlat = 999
-    __minlon = 999
-    __maxlon = 999
+    __longitude = None
+    __latitude = None
+    __startLine = -1
+    __endLine  = -1
+
 
     def __init__(self):
         super(H8Dataprovider,self).__init__()
+        return
+
+    def Dispose(self):
+        self.__HdfOperator.Close(self.__lonFileHandle)
+        self.__HdfOperator.Close(self.__latFileHandle)
+        self.__HdfOperator.Close(self.__DataFileHandle)
+        self.__longitude = None
+        self.__latitude = None
         return
 
     def SetFile(self,file):
@@ -25,32 +34,33 @@ class H8Dataprovider(DataProvider):
 
 
     def Longitude(self):
-        lon= N.array(self.__HdfOperator.ReadHdfDataset(self.__lonFileHandle, '/', 'Lon'))
-        self.__HdfOperator.Close(self.__lonFileHandle)
 
+        if self.__longitude== None:
+            self.__longitude = N.array(self.__HdfOperator.ReadHdfDataset(self.__lonFileHandle, '/', 'Lon'))
 
-        return lon
+        if self.__startLine !=-1 & self.__endLine!=-1:
+            return  self.__longitude[self.__startLine:self.__endLine:, :]
+        return self.__longitude
 
 
 
     def Latitude(self):
-        lat=N.array(self.__HdfOperator.ReadHdfDataset(self.__latFileHandle, '/', 'Lat'))
 
-        self.__HdfOperator.Close(self.__latFileHandle)
+        if self.__latitude== None:
+            self.__latitude = N.array(self.__HdfOperator.ReadHdfDataset(self.__latFileHandle, '/', 'Lat'))
 
-        if self.__minlat!=999 & self.__maxlat!=999:
-            rangeIndex = N.where((self.__minlat<=lat) & (lat<=self.__maxlat))
-            start = N.min(rangeIndex[:][0])
-            end = N.max(rangeIndex[:][0])
-            return lat[start:end,:]
+        if self.__startLine !=-1 & self.__endLine!=-1:
+            return  self.__latitude[self.__startLine:self.__endLine:, :]
 
-        return lat
+        return self.__latitude
+
 
     def GetResolution(self):
         return 4000
 
     def RefData(self,band):
         bandname = ''
+        ret = None
         if band == 0:
             bandname = 'NOMChannelVIS0064_4000'
         elif band == 1:
@@ -62,10 +72,33 @@ class H8Dataprovider(DataProvider):
 
         if bandname!='':
 
-            data=self.__HdfOperator.ReadHdfDataset(self.__DataFileHandle, '/', bandname)
-            return data[:,:]
+            ret=self.GetDataSet('/', bandname)
 
-        return None
+        return ret
+
+    def SensorAzimuth(self):
+
+        return self.GetDataSet('/','NOMSatelliteAzimuth')
+
+
+    def GetDataSet(self,group,ds):
+
+        data = self.__HdfOperator.ReadHdfDataset(self.__DataFileHandle, group, ds)
+        ret = None
+        if self.__startLine != -1 & self.__endLine != -1:
+            ret = data[self.__startLine:self.__endLine:, :]
+        else:
+            ret = data[:,:]
+        return ret
+
+    def SensorZenith(self):
+        return self.GetDataSet('/','NOMSatelliteZenith')
+
+    def SolarAzimuth(self):
+        return self.GetDataSet('/','NOMSunAzimuth')
+
+    def SolarZenith(self):
+        return self.GetDataSet('/','NOMSunZenith')
 
     def EmissData(self,band):
         return
@@ -74,8 +107,26 @@ class H8Dataprovider(DataProvider):
         return  self.__fileName
 
     def SetRange(self,minlat,maxlat,minlon,maxlon):
-        self.__minlat = minlat
-        self.__maxlat = maxlat
-        self.__minlon = minlon
-        self.__maxlon = maxlon
+
+
+        lat = self.Latitude()
+        rangeIndex = N.where((minlat<=lat) & (lat<=maxlat))
+
+        if rangeIndex[:][0].size<=0:
+            return
+
+        self.__startLine = N.min(rangeIndex[:][0])-10
+        self.__endLine = N.max(rangeIndex[:][0])+10
+
+        if self.__startLine < 0:
+            self.__startLine = 0
+
+        lineCount = lat.shape[0]
+
+        if self.__endLine >= lineCount:
+            self.__endLine = lineCount-1
+
+
         return
+
+

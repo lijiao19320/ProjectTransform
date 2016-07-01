@@ -34,3 +34,23 @@ class DataProvider(object):
     @abstractmethod
     def SetRange(self,minlat,maxlat,minlon,maxlon):
         pass
+
+    @abstractmethod
+    def SensorAzimuth(self):
+        pass
+
+    @abstractmethod
+    def SensorZenith(self):
+        pass
+
+    @abstractmethod
+    def SolarAzimuth(self):
+        pass
+
+    @abstractmethod
+    def SolarZenith(self):
+        pass
+
+    @abstractmethod
+    def Dispose(self):
+        pass
