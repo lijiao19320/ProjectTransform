@@ -27,27 +27,27 @@ class FY3AVirrProvider(DataProvider):
         return  self.__fileName
 
 
-    def Longitude(self):
+    def GetLongitude(self):
         return self.__HdfOperator.ReadHdfDataset(self.__filehandel, '/', 'Longitude')
 
 
 
-    def Latitude(self):
+    def GetLatitude(self):
         return self.__HdfOperator.ReadHdfDataset(self.__filehandel, '/', 'Latitude')
 
-    def SensorAzimuth(self):
+    def GetSensorAzimuth(self):
         return
 
-    def SensorZenith(self):
+    def GetSensorZenith(self):
         return
 
-    def SolarAzimuth(self):
+    def GetSolarAzimuth(self):
         return
 
-    def SolarZenith(self):
+    def GetSolarZenith(self):
         return
 
-    def RefData(self,band):
+    def GetRefData(self, band):
         if self.__RefData == None:
             self.__RefData = self.__HdfOperator.ReadHdfDataset(self.__filehandel, '/', 'EV_RefSB')
         return self.__RefData[band,:,:]

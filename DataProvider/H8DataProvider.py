@@ -2,6 +2,9 @@ from DataProvider import *
 from HdfOperator import *
 import numpy as N
 
+
+
+
 class H8Dataprovider(DataProvider):
     __HdfOperator = HdfOperator()
     __latFileHandle = None
@@ -33,7 +36,7 @@ class H8Dataprovider(DataProvider):
         self.__fileName = file[2]
 
 
-    def Longitude(self):
+    def GetLongitude(self):
 
         if self.__longitude== None:
             self.__longitude = N.array(self.__HdfOperator.ReadHdfDataset(self.__lonFileHandle, '/', 'Lon'))
@@ -44,7 +47,7 @@ class H8Dataprovider(DataProvider):
 
 
 
-    def Latitude(self):
+    def GetLatitude(self):
 
         if self.__latitude== None:
             self.__latitude = N.array(self.__HdfOperator.ReadHdfDataset(self.__latFileHandle, '/', 'Lat'))
@@ -58,7 +61,7 @@ class H8Dataprovider(DataProvider):
     def GetResolution(self):
         return 4000
 
-    def RefData(self,band):
+    def GetRefData(self, band):
         bandname = ''
         ret = None
         if band == 0:
@@ -76,7 +79,7 @@ class H8Dataprovider(DataProvider):
 
         return ret
 
-    def SensorAzimuth(self):
+    def GetSensorAzimuth(self):
 
         return self.GetDataSet('/','NOMSatelliteAzimuth')
 
@@ -91,16 +94,16 @@ class H8Dataprovider(DataProvider):
             ret = data[:,:]
         return ret
 
-    def SensorZenith(self):
+    def GetSensorZenith(self):
         return self.GetDataSet('/','NOMSatelliteZenith')
 
-    def SolarAzimuth(self):
+    def GetSolarAzimuth(self):
         return self.GetDataSet('/','NOMSunAzimuth')
 
-    def SolarZenith(self):
+    def GetSolarZenith(self):
         return self.GetDataSet('/','NOMSunZenith')
 
-    def EmissData(self,band):
+    def GetEmissData(self, band):
         return
 
     def GetFile(self):
@@ -109,7 +112,7 @@ class H8Dataprovider(DataProvider):
     def SetRange(self,minlat,maxlat,minlon,maxlon):
 
 
-        lat = self.Latitude()
+        lat = self.GetLatitude()
         rangeIndex = N.where((minlat<=lat) & (lat<=maxlat))
 
         if rangeIndex[:][0].size<=0:

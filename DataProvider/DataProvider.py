@@ -2,17 +2,42 @@ import sys
 from abc import ABCMeta, abstractmethod
 
 
+class OrbitInfo(object):
+    def __init__(self):
+        self.Sat = ''
+        self.Sensor = ''
+        self.OrbitDirection= ''
+        self.DNFlag = ''
+        self.Date=''
+        self.Time=''
+        self.BandsCount = 0
+        self.Band_name=''
+        self.RefSBBandsCount = 0
+        self.Width = 0
+        self.Height = 0
+        self.RefSBBandsNames = ''
+        self.EmissiveBandsCoun=0
+        self.EmissiveBandsNames = ''
+
+
 class DataProvider(object):
 
     def __init__(self):
         return
 
+    __OrbitInfo = OrbitInfo()
+
+    @property
+    def OrbitInfo(self):
+        return  self.__OrbitInfo
+
+
     @abstractmethod
-    def Longitude(self):
+    def GetLongitude(self):
         pass
 
     @abstractmethod
-    def Latitude(self):
+    def GetLatitude(self):
         pass
 
     @abstractmethod
@@ -20,11 +45,11 @@ class DataProvider(object):
         pass
 
     @abstractmethod
-    def RefData(self,band):
+    def GetRefData(self, band):
         pass
 
     @abstractmethod
-    def EmissData(self,band):
+    def GetEmissData(self, band):
         pass
 
     @abstractmethod
@@ -36,19 +61,19 @@ class DataProvider(object):
         pass
 
     @abstractmethod
-    def SensorAzimuth(self):
+    def GetSensorAzimuth(self):
         pass
 
     @abstractmethod
-    def SensorZenith(self):
+    def GetSensorZenith(self):
         pass
 
     @abstractmethod
-    def SolarAzimuth(self):
+    def GetSolarAzimuth(self):
         pass
 
     @abstractmethod
-    def SolarZenith(self):
+    def GetSolarZenith(self):
         pass
 
     @abstractmethod

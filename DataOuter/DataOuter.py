@@ -10,6 +10,6 @@ class DataOuter(object):
         return
 
     @abstractmethod
-    def Save(self,outdata):
+    def Save(self,projResult,dataProvider):
         pass
 

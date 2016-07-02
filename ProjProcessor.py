@@ -3,16 +3,16 @@
 from DataOuter.DataOuter import *
 from DataProvider.DataProvider import *
 from ProjectTransformer import *
-
+from ProjResult import *
 
 class ProjProcessor(object):
 
     __dataProvider = DataProvider()
     __ProjTransformer = ProjTransformer()
     __ProjParam = ProjParameters()
-    __dataOut = DataOuter()
+    __dataOuter = DataOuter()
 
-
+    __projResult = ProjResult()
 
 
 
@@ -24,21 +24,26 @@ class ProjProcessor(object):
         self.__ProjParam = parameters
 
     def SetDataOut(self,out):
-        self.__dataOut = out
+        self.__dataOuter = out
 
 
     def PerformProj(self):
-        lat = self.__dataProvider.Latitude()
-        lon = self.__dataProvider.Longitude()
+        lat = self.__dataProvider.GetLatitude()
+        lon = self.__dataProvider.GetLongitude()
 
         proj = self.__ProjParam.DstProj
         U, V = self.__ProjTransformer.LatlonToProjUV(lon,lat,proj)
 
-        self.__dataOut.Save(U,V,self.__dataProvider)
+        self.__projResult.U = U
+        self.__projResult.V = V
 
 
 
+        self.__dataOuter.Save(self.__projResult,self.__dataProvider)
 
+
+    def CreateResultInfo(self):
+        self.__projResult.ResultInfo['Satellite Name':]
 
 
 

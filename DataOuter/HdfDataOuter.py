@@ -16,9 +16,10 @@ class HdfDataOuter(DataOuter):
         return
 
 
-    def Save(self,U,V, dataProvider):
+    def Save(self,projResult, dataProvider):
         self.__dataProvider = dataProvider
-
+        U = projResult.U
+        V = projResult.V
         minU, minV, maxU, maxV,maskU,maskV=self.CalProjectMinMax(U,V)
         resolution =self.__dataProvider.GetResolution()
         Height, Width = self.CalProjectWidthAndHeight( minU, minV, maxU, maxV,resolution)
@@ -34,28 +35,28 @@ class HdfDataOuter(DataOuter):
 
         fileHandle = self.__HdfOperator.Open(savefilePath)
 
-        refdata = self.__dataProvider.RefData(0)
+        refdata = self.__dataProvider.GetRefData(0)
         if refdata != None:
             savdrefData=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,refdata)
             self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'EVB_Ref', savdrefData)
 
-        sensorAzimuthdata = self.__dataProvider.SensorAzimuth()
+        sensorAzimuthdata = self.__dataProvider.GetSensorAzimuth()
         if sensorAzimuthdata!=None:
             savesensorAzimuthdata=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,sensorAzimuthdata)
             self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'SensorAzimuth', savesensorAzimuthdata)
 
-        sensorZenithdata = self.__dataProvider.SensorZenith()
+        sensorZenithdata = self.__dataProvider.GetSensorZenith()
         if sensorZenithdata!=None:
             savesensorZenithdata=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,sensorZenithdata)
             self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'SensorZenith', savesensorZenithdata)
 
-        solarAzimuthdata = self.__dataProvider.SolarAzimuth()
+        solarAzimuthdata = self.__dataProvider.GetSolarAzimuth()
         if solarAzimuthdata!=None:
             savesolarAzimuthdata=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,solarAzimuthdata)
             self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'SolarAzimuth', savesolarAzimuthdata)
 
 
-        solarZenithdata = self.__dataProvider.SolarZenith()
+        solarZenithdata = self.__dataProvider.GetSolarZenith()
         if solarZenithdata!=None:
             savesoarZenithdata=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,solarZenithdata)
             self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'SolarZenith', savesoarZenithdata)
