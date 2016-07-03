@@ -3,7 +3,7 @@ from HdfOperator import *
 from DataProvider.DataProvider import *
 import numpy as N
 import cos_module_np as SD
-
+from scipy.interpolate import griddata
 
 class HdfDataOuter(DataOuter):
 
@@ -61,13 +61,15 @@ class HdfDataOuter(DataOuter):
             savesoarZenithdata=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,solarZenithdata)
             self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'SolarZenith', savesoarZenithdata)
 
+        for attr in projResult.ResultInfo.keys():
+            self.__HdfOperator.WriteHdfAttribute(fileHandle,attr,projResult.ResultInfo[attr])
         # self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'U', U)
         # self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'V', V)
         self.__HdfOperator.Close(fileHandle)
         return
 
 
-    def WriteAttribute(self):
+    def WriteAttribute(self,projResult):
 
         return
 
@@ -139,5 +141,5 @@ class HdfDataOuter(DataOuter):
 
         # print N.max(refdata),N.min(refdata)
         # savemask = (saveData[:,:]==0)
-
+        # saveData = griddata(points, values, (grid_x, grid_y), method='nearest')
         return saveData

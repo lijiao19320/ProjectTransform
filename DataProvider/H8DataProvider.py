@@ -19,7 +19,32 @@ class H8Dataprovider(DataProvider):
 
     def __init__(self):
         super(H8Dataprovider,self).__init__()
+
         return
+
+    def __InitOrbitInfo(self):
+        self.OrbitInfo.Sat = 'Himawari 8'
+        self.OrbitInfo.Sensor = 'H8'
+        self.OrbitInfo.OrbitDirection= ''
+
+        self.OrbitInfo.Width = 2750
+        self.OrbitInfo.Height = 2750
+
+        solarzenith = self.GetSolarZenith();
+        if solarzenith[int(2750/2),int(2750/2)] <=85:
+            self.OrbitInfo.DNFlag = 'D'
+        else:
+            self.OrbitInfo.DNFlag = 'N'
+
+        self.OrbitInfo.Date=''
+        self.OrbitInfo.Time=''
+        self.OrbitInfo.BandsCount = 16
+        self.OrbitInfo.Band_name=''
+        self.OrbitInfo.RefSBBandsCount = 0
+
+        self.OrbitInfo.RefSBBandsNames = ''
+        self.OrbitInfo.EmissiveBandsCoun=0
+        self.OrbitInfo.EmissiveBandsNames = ''
 
     def Dispose(self):
         self.__HdfOperator.Close(self.__lonFileHandle)
@@ -34,6 +59,7 @@ class H8Dataprovider(DataProvider):
         self.__lonFileHandle = self.__HdfOperator.Open(file[1])
         self.__DataFileHandle = self.__HdfOperator.Open(file[2])
         self.__fileName = file[2]
+        self.__InitOrbitInfo()
 
 
     def GetLongitude(self):

@@ -38,12 +38,14 @@ class ProjProcessor(object):
         self.__projResult.V = V
 
 
-
+        self.CreateResultInfo();
         self.__dataOuter.Save(self.__projResult,self.__dataProvider)
 
 
     def CreateResultInfo(self):
-        self.__projResult.ResultInfo['Satellite Name':]
+        self.__projResult.ResultInfo={'Satellite Name':self.__dataProvider.OrbitInfo.Sat}
+        self.__projResult.ResultInfo['Sensor Name']=self.__dataProvider.OrbitInfo.Sensor
+
 
 
 

@@ -29,3 +29,6 @@ class ProjResult(object):
         return  self.__ResultInfo
 
 
+    @ResultInfo.setter
+    def ResultInfo(self, new_value):
+        self.__ResultInfo = new_value
