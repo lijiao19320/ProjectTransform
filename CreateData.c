@@ -13,28 +13,22 @@ static PyObject* cos_func_np(PyObject* self, PyObject* args)
     PyArrayObject *in_array_tu;
     PyArrayObject *in_array_tv;
     PyArrayObject *in_array_refdata;
-    //PyArrayObject *in_array_savedata;
-    //PyObject      *out_array;
-    //printf("argument parser");
+
 
     /*  parse single numpy array argument */
     if (!PyArg_ParseTuple(args, "iiO!O!O!",&width,&height, &PyArray_Type, &in_array_tu, &PyArray_Type, &in_array_tv,
      &PyArray_Type, &in_array_refdata))
         return NULL;
-     //printf("argument parser OK");
 
-//      npy_int32 *datatu = (npy_int32*)   PyArray_DATA(in_array_tu);
-//      npy_int32 *datatv = (npy_int32*)   PyArray_DATA(in_array_tv);
-//      npy_int32 *dataref = (npy_int32*)   PyArray_DATA(in_array_refdata);
       PyArrayIterObject *tu_iter = (PyArrayIterObject *)PyArray_IterNew((PyObject*)in_array_tu);
       PyArrayIterObject *tv_iter = (PyArrayIterObject* )PyArray_IterNew((PyObject*)in_array_tv);
       PyArrayIterObject *ref_iter = (PyArrayIterObject *)PyArray_IterNew((PyObject*)in_array_refdata);
-      //datasave = (npy_int32*)   PyArray_DATA(in_array_savedata);
+
 
     npy_intp dims[2] = {height,width};
 
     PyObject *savedata = PyArray_SimpleNew(2, dims, NPY_INT);
-//    PyObject *savedata = PyArray_EMPTY(2, dims, NPY_FLOAT,0);
+
     PyArrayIterObject *save_iter;
     save_iter = (PyArrayIterObject *)PyArray_IterNew(savedata);
 
@@ -49,22 +43,16 @@ static PyObject* cos_func_np(PyObject* self, PyObject* args)
     }
 
     int i =0;
-   // int j =0;
+
     for( i =0 ;i < tu_iter->size;i++)
      {
-       // for( j = 0;j<in_iter->size;j++)
+
         {
 
 
             int * tudataptr = (int *)tu_iter->dataptr;
             int * tvdataptr = (int *)tv_iter->dataptr;
-//            if(*(tudataptr)< 0 || *(tudataptr)> 99999)
-//            {
-//               // *(out_savedataptr) = 400;
-//                continue;
-//            }
 
-            //printf("%d,%d\n",*(tudataptr),*(tvdataptr));
 
             int * refdataptr = (int *)ref_iter->dataptr;
 
@@ -77,12 +65,10 @@ static PyObject* cos_func_np(PyObject* self, PyObject* args)
             PyArray_ITER_NEXT(tu_iter);
             PyArray_ITER_NEXT(tv_iter);
             PyArray_ITER_NEXT(ref_iter);
-          // PyArray_ITER_NEXT(save_iter);
-            //savedata[i*width+j]->dataptr = 1;
-            //
+
         }
      }
-    //printf("1111");
+
     /*  clean up and return the result */
     Py_DECREF(in_array_tu);
     Py_DECREF(in_array_tv);

@@ -20,9 +20,9 @@ class HdfDataOuter(DataOuter):
         self.__dataProvider = dataProvider
         U = projResult.U
         V = projResult.V
-        minU, minV, maxU, maxV,maskU,maskV=self.CalProjectMinMax(U,V)
-        resolution =self.__dataProvider.GetResolution()
-        Height, Width = self.CalProjectWidthAndHeight( minU, minV, maxU, maxV,resolution)
+        # minU, minV, maxU, maxV,maskU,maskV=self.CalProjectMinMax(U,V)
+        # resolution =self.__dataProvider.GetResolution()
+        # Height, Width = self.CalProjectWidthAndHeight( minU, minV, maxU, maxV,resolution)
         savefilePath = self.__dataProvider.GetFile()
 
         savePath,saveFile =  os.path.split(savefilePath)
@@ -37,28 +37,29 @@ class HdfDataOuter(DataOuter):
 
         refdata = self.__dataProvider.GetRefData(0)
         if refdata != None:
-            savdrefData=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,refdata)
+            # savdrefData=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,refdata)
+            savdrefData = self.CreateSaveData(U, V, refdata)
             self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'EVB_Ref', savdrefData)
 
         sensorAzimuthdata = self.__dataProvider.GetSensorAzimuth()
         if sensorAzimuthdata!=None:
-            savesensorAzimuthdata=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,sensorAzimuthdata)
+            savesensorAzimuthdata=self.CreateSaveData(U, V, sensorAzimuthdata)
             self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'SensorAzimuth', savesensorAzimuthdata)
 
         sensorZenithdata = self.__dataProvider.GetSensorZenith()
         if sensorZenithdata!=None:
-            savesensorZenithdata=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,sensorZenithdata)
+            savesensorZenithdata=self.CreateSaveData(U, V,sensorZenithdata)
             self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'SensorZenith', savesensorZenithdata)
 
         solarAzimuthdata = self.__dataProvider.GetSolarAzimuth()
         if solarAzimuthdata!=None:
-            savesolarAzimuthdata=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,solarAzimuthdata)
+            savesolarAzimuthdata=self.CreateSaveData(U, V,solarAzimuthdata)
             self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'SolarAzimuth', savesolarAzimuthdata)
 
 
         solarZenithdata = self.__dataProvider.GetSolarZenith()
         if solarZenithdata!=None:
-            savesoarZenithdata=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,solarZenithdata)
+            savesoarZenithdata=self.CreateSaveData(U, V, solarZenithdata)
             self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'SolarZenith', savesoarZenithdata)
 
         for attr in projResult.ResultInfo.keys():
@@ -114,8 +115,15 @@ class HdfDataOuter(DataOuter):
 
         return Height,Width
 
-    def CreateSaveData(self,minU, minV,width,height,U,V,resolution,refdata):
+    # def CreateSaveData(self,minU, minV,width,height,U,V,resolution,refdata):
+    def CreateSaveData(self, U, V, refdata):
         # saveData = N.ones((height,width))*400
+
+        minU, minV, maxU, maxV,maskU,maskV=self.CalProjectMinMax(U,V)
+        resolution = self.__dataProvider.GetResolution()
+        Height, Width = self.CalProjectWidthAndHeight( minU, minV, maxU, maxV,resolution)
+
+
         UVshape = U.shape
         resolutionFactor = float(1)/float(resolution)
         ru = U*resolutionFactor
@@ -127,8 +135,13 @@ class HdfDataOuter(DataOuter):
 
         # icount = UVshape[0]
         # jcount = UVshape[1]
-
-        saveData = SD.cos_func_np(int(width), int(height), tu, tv, refdata.astype(int))
+        # grid_x, grid_y = N.mgrid[minV:maxV:resolution, minU:maxU:resolution]
+        #
+        # grid= N.column_stack((tv.ravel(),tu.ravel()))
+        # ref = refdata.ravel()
+        # saveData = griddata(grid, ref, (grid_x, grid_y), method='nearest')
+        # saveData = 0
+        saveData = SD.cos_func_np(int(Width), int(Height), tu, tv, refdata.astype(int))
 
         # for i in range(icount):
         #     for j in range(jcount):
