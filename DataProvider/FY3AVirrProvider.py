@@ -11,6 +11,11 @@ class FY3AVirrProvider(DataProvider):
 
     __RefData = None
 
+    __longitude = None
+    __latitude = None
+    __startLine = -1
+    __endLine  = -1
+
 
     def __init__(self):
         super(FY3AVirrProvider,self).__init__()
@@ -22,6 +27,7 @@ class FY3AVirrProvider(DataProvider):
     def SetFile(self,file):
 
         self.__filehandel = self.__HdfOperator.Open(file)
+        self.__fileName = file
 
     def GetFile(self):
         return  self.__fileName

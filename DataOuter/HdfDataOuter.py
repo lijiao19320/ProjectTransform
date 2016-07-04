@@ -4,6 +4,8 @@ from DataProvider.DataProvider import *
 import numpy as N
 import cos_module_np as SD
 from scipy.interpolate import griddata
+from scipy.weave import inline
+from scipy.weave import converters
 
 class HdfDataOuter(DataOuter):
 
@@ -20,9 +22,11 @@ class HdfDataOuter(DataOuter):
         self.__dataProvider = dataProvider
         U = projResult.U
         V = projResult.V
-        # minU, minV, maxU, maxV,maskU,maskV=self.CalProjectMinMax(U,V)
-        # resolution =self.__dataProvider.GetResolution()
-        # Height, Width = self.CalProjectWidthAndHeight( minU, minV, maxU, maxV,resolution)
+
+        # refdata = self.__dataProvider.GetRefData(0)
+        # savdrefData = self.CreateSaveData(U, V, refdata)
+        # return
+
         savefilePath = self.__dataProvider.GetFile()
 
         savePath,saveFile =  os.path.split(savefilePath)
@@ -40,6 +44,9 @@ class HdfDataOuter(DataOuter):
             # savdrefData=self.CreateSaveData(minU, minV,Width,Height,U,V,resolution,refdata)
             savdrefData = self.CreateSaveData(U, V, refdata)
             self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'EVB_Ref', savdrefData)
+
+        self.__HdfOperator.Close(fileHandle)
+        return
 
         sensorAzimuthdata = self.__dataProvider.GetSensorAzimuth()
         if sensorAzimuthdata!=None:
@@ -117,12 +124,13 @@ class HdfDataOuter(DataOuter):
 
     # def CreateSaveData(self,minU, minV,width,height,U,V,resolution,refdata):
     def CreateSaveData(self, U, V, refdata):
-        # saveData = N.ones((height,width))*400
+
 
         minU, minV, maxU, maxV,maskU,maskV=self.CalProjectMinMax(U,V)
         resolution = self.__dataProvider.GetResolution()
         Height, Width = self.CalProjectWidthAndHeight( minU, minV, maxU, maxV,resolution)
 
+        # saveData = N.ones((Height, Width)) * 400
 
         UVshape = U.shape
         resolutionFactor = float(1)/float(resolution)
@@ -130,18 +138,18 @@ class HdfDataOuter(DataOuter):
         rv = V*resolutionFactor
         minUF = minU*resolutionFactor
         minVF = minV*resolutionFactor
-        tu = (ru-minUF).astype(int)
-        tv = (rv-minVF).astype(int)
+        tu = (ru-minUF).astype(int)[maskU]
+        tv = (rv-minVF).astype(int)[maskU]
 
-        # icount = UVshape[0]
-        # jcount = UVshape[1]
-        # grid_x, grid_y = N.mgrid[minV:maxV:resolution, minU:maxU:resolution]
-        #
-        # grid= N.column_stack((tv.ravel(),tu.ravel()))
-        # ref = refdata.ravel()
-        # saveData = griddata(grid, ref, (grid_x, grid_y), method='nearest')
+        icount = int(UVshape[0])
+        jcount = int(UVshape[1])
+        grid_x, grid_y = N.mgrid[0:Height, 0:Width]
+
+        grid= N.column_stack((tv.ravel(),tu.ravel()))
+        ref = refdata[maskU].ravel()
+        saveData = griddata(grid, ref, (grid_x.astype(int), grid_y.astype(int)), method='nearest',rescale = True)
         # saveData = 0
-        saveData = SD.cos_func_np(int(Width), int(Height), tu, tv, refdata.astype(int))
+        # saveData = SD.cos_func_np(int(Width), int(Height), tu, tv, refdata.astype(int))
 
         # for i in range(icount):
         #     for j in range(jcount):
