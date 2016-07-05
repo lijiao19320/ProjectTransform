@@ -45,9 +45,6 @@ class HdfDataOuter(DataOuter):
             savdrefData = self.CreateSaveData(U, V, refdata)
             self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'EVB_Ref', savdrefData)
 
-        self.__HdfOperator.Close(fileHandle)
-        return
-
         sensorAzimuthdata = self.__dataProvider.GetSensorAzimuth()
         if sensorAzimuthdata!=None:
             savesensorAzimuthdata=self.CreateSaveData(U, V, sensorAzimuthdata)
@@ -138,18 +135,18 @@ class HdfDataOuter(DataOuter):
         rv = V*resolutionFactor
         minUF = minU*resolutionFactor
         minVF = minV*resolutionFactor
-        tu = (ru-minUF).astype(int)[maskU]
-        tv = (rv-minVF).astype(int)[maskU]
+        tu = (ru-minUF).astype(int)
+        tv = (rv-minVF).astype(int)
 
-        icount = int(UVshape[0])
-        jcount = int(UVshape[1])
-        grid_x, grid_y = N.mgrid[0:Height, 0:Width]
-
-        grid= N.column_stack((tv.ravel(),tu.ravel()))
-        ref = refdata[maskU].ravel()
-        saveData = griddata(grid, ref, (grid_x.astype(int), grid_y.astype(int)), method='nearest',rescale = True)
+        # icount = int(UVshape[0])
+        # jcount = int(UVshape[1])
+        # grid_x, grid_y = N.mgrid[0:Height, 0:Width]
+        #
+        # grid= N.column_stack((tv.ravel(),tu.ravel()))
+        # ref = refdata[maskU].ravel()
+        # saveData = griddata(grid, ref, (grid_x.astype(int), grid_y.astype(int)), method='nearest',interp='nn')
         # saveData = 0
-        # saveData = SD.cos_func_np(int(Width), int(Height), tu, tv, refdata.astype(int))
+        saveData = SD.cos_func_np(int(Width), int(Height), tu, tv, refdata.astype(int))
 
         # for i in range(icount):
         #     for j in range(jcount):
@@ -161,6 +158,6 @@ class HdfDataOuter(DataOuter):
         #         saveData[posY,posX] = refdata[i,j]
 
         # print N.max(refdata),N.min(refdata)
-        # savemask = (saveData[:,:]==0)
+        # savemask = (saveData[:,:]==0)l
         # saveData = griddata(points, values, (grid_x, grid_y), method='nearest')
         return saveData
