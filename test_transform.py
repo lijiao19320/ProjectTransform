@@ -6,17 +6,17 @@ from ProjProcessor import *
 # file = '/mnt/hgfs/Vmware Linux/Data/FY3A_VIRRX_GBAL_L1_20090427_0255_1000M_MS.HDF'
 file = ['/mnt/hgfs/Vmware Linux/Data/fygatNAV.Himawari08.xxxxxxx.000001.hdf']
 file.append('/mnt/hgfs/Vmware Linux/Data/fygatNAV.Himawari08.xxxxxxx.000002.hdf')
-file.append('/mnt/hgfs/Vmware Linux/Data/AHI8_OBI_4000M_NOM_20160414_1900.hdf')
+file.append('/mnt/hgfs/Vmware Linux/Data/AHI8_OBI_4000M_NOM_20160414_0500.hdf')
 
 
 provider = H8Dataprovider()
 # provider = FY3AVirrProvider()
 provider.SetFile(file)
-provider.SetRange(0,90,0,0)
+provider.SetRange(-80,80,0,0)
 
 
 param = ProjParameters()
-param.DstProj = Proj(proj='merc',datum='WGS84',lon_0=145,x_0=50000,y_0=50000)
+param.DstProj = Proj(proj='merc',datum='WGS84',lon_0=145)
 
 dataouter = HdfDataOuter()
 

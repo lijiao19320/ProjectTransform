@@ -82,6 +82,8 @@ static PyObject* cos_func_np(PyObject* self, PyObject* args)
      }
 
     CFill_Gap_By_NeighbourPoint(OD,width,height,8,65535);
+
+//    CFill_Gap_By_InterpolatingAlongX(OD,width,height, 0 , 65535, 0);
     PyArray_ITER_NEXT(save_iter);
     for(index = 0;index<count;index++)
     {

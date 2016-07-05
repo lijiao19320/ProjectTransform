@@ -45,6 +45,9 @@ class HdfDataOuter(DataOuter):
             savdrefData = self.CreateSaveData(U, V, refdata)
             self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'EVB_Ref', savdrefData)
 
+        self.__HdfOperator.Close(fileHandle)
+        return
+
         sensorAzimuthdata = self.__dataProvider.GetSensorAzimuth()
         if sensorAzimuthdata!=None:
             savesensorAzimuthdata=self.CreateSaveData(U, V, sensorAzimuthdata)
