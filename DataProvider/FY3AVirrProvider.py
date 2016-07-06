@@ -61,6 +61,6 @@ class FY3AVirrProvider(DataProvider):
     def GetResolution(self):
         return 1000
 
-    def SetRange(self,minlat,maxlat,minlon,maxlon):
-
-        return
+    # def SetParameter(self, papameter):
+    #
+    #     return

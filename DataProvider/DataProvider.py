@@ -1,6 +1,6 @@
 import sys
 from abc import ABCMeta, abstractmethod
-
+import numpy as N
 
 class OrbitInfo(object):
     def __init__(self):
@@ -26,6 +26,10 @@ class DataProvider(object):
         return
 
     __OrbitInfo = OrbitInfo()
+
+    startLine = -1
+    endLine  = -1
+    __parameter = None
 
     @property
     def OrbitInfo(self):
@@ -56,9 +60,9 @@ class DataProvider(object):
     def GetFile(self):
         pass
 
-    @abstractmethod
-    def SetRange(self,minlat,maxlat,minlon,maxlon):
-        pass
+    # @abstractmethod
+    # def SetParameter(self, papameter):
+    #     pass
 
     @abstractmethod
     def GetSensorAzimuth(self):
@@ -79,3 +83,30 @@ class DataProvider(object):
     @abstractmethod
     def Dispose(self):
         pass
+
+    def SetParameter(self, papameter):
+        papameter.register(self)
+        self.__parameter = papameter
+
+        return
+
+    def OnParametersUpdate(self):
+        lat = self.GetLatitude()
+        minlat = self.__parameter.ProjRange.MinLat
+        maxlat = self.__parameter.ProjRange.MaxLat
+        rangeIndex = N.where((minlat<=lat) & (lat<=maxlat))
+
+        if rangeIndex[:][0].size<=0:
+            return
+
+        self.startLine = N.min(rangeIndex[:][0])-10
+        self.endLine = N.max(rangeIndex[:][0])+10
+
+        if self.startLine < 0:
+            self.startLine = 0
+
+        lineCount = lat.shape[0]
+
+        if self.endLine >= lineCount:
+            self.endLine = lineCount-1
+        return

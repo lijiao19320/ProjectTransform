@@ -14,22 +14,34 @@ class ProjProcessor(object):
 
     __projResult = ProjResult()
 
-
-
-    def SetDataProvider(self,provider):
-        self.__dataProvider = provider
-
-
-    def SetProjParameters(self,parameters):
+    def __init__(self, dataprovider, dataouter, parameters):
+        self.__dataProvider = dataprovider
         self.__ProjParam = parameters
+        self.__dataOuter = dataouter
 
-    def SetDataOut(self,out):
-        self.__dataOuter = out
+        self.__dataProvider.SetParameter(parameters)
+
+
+        self.__ProjParam.data_changed()
+        return
+
+    # def SetDataProvider(self,provider):
+    #     self.__dataProvider = provider
+    #
+    #
+    # def SetProjParameters(self,parameters):
+    #     self.__ProjParam = parameters
+    #
+    # def SetDataOut(self,out):l
+    #     self.__dataOuter = out
 
 
     def PerformProj(self):
         lat = self.__dataProvider.GetLatitude()
         lon = self.__dataProvider.GetLongitude()
+
+        masklat = ((lat[:,:]<= self.__ProjParam.ProjRange.MaxLat) & (lat[:,:]>= self.__ProjParam.ProjRange.MinLat))
+
 
         proj = self.__ProjParam.DstProj
         U, V = self.__ProjTransformer.LatlonToProjUV(lon,lat,proj)
@@ -38,7 +50,7 @@ class ProjProcessor(object):
         self.__projResult.V = V
 
 
-        self.CreateResultInfo();
+        self.CreateResultInfo()
         self.__dataOuter.Save(self.__projResult,self.__dataProvider)
 
 

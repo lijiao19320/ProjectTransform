@@ -1,7 +1,7 @@
 from DataProvider import *
 from HdfOperator import *
 import numpy as N
-
+from Parameters import *
 
 
 
@@ -13,13 +13,12 @@ class H8Dataprovider(DataProvider):
     __fileName = None
     __longitude = None
     __latitude = None
-    __startLine = -1
-    __endLine  = -1
+
+
 
 
     def __init__(self):
         super(H8Dataprovider,self).__init__()
-
         return
 
     def __InitOrbitInfo(self):
@@ -64,22 +63,25 @@ class H8Dataprovider(DataProvider):
 
     def GetLongitude(self):
 
+        startLine = self.startLine
+        endlLine = self.endLine
         if self.__longitude== None:
             self.__longitude = N.array(self.__HdfOperator.ReadHdfDataset(self.__lonFileHandle, '/', 'Lon'))
 
-        if self.__startLine !=-1 & self.__endLine!=-1:
-            return  self.__longitude[self.__startLine:self.__endLine:, :]
+        if startLine!=-1 & endlLine!=-1:
+            return  self.__longitude[startLine:endlLine:, :]
         return self.__longitude
 
 
 
     def GetLatitude(self):
-
+        startLine = self.startLine
+        endlLine = self.endLine
         if self.__latitude== None:
             self.__latitude = N.array(self.__HdfOperator.ReadHdfDataset(self.__latFileHandle, '/', 'Lat'))
 
-        if self.__startLine !=-1 & self.__endLine!=-1:
-            return  self.__latitude[self.__startLine:self.__endLine:, :]
+        if startLine!=-1 & endlLine!=-1:
+            return  self.__latitude[startLine:endlLine:, :]
 
         return self.__latitude
 
@@ -113,9 +115,11 @@ class H8Dataprovider(DataProvider):
     def GetDataSet(self,group,ds):
 
         data = self.__HdfOperator.ReadHdfDataset(self.__DataFileHandle, group, ds)
+        startLine = self.startLine
+        endlLine = self.endLine
         ret = None
-        if self.__startLine != -1 & self.__endLine != -1:
-            ret = data[self.__startLine:self.__endLine:, :]
+        if startLine!= -1 & endlLine!= -1:
+            ret = data[startLine:endlLine, :]
         else:
             ret = data[:,:]
         return ret
@@ -134,28 +138,5 @@ class H8Dataprovider(DataProvider):
 
     def GetFile(self):
         return  self.__fileName
-
-    def SetRange(self,minlat,maxlat,minlon,maxlon):
-
-
-        lat = self.GetLatitude()
-        rangeIndex = N.where((minlat<=lat) & (lat<=maxlat))
-
-        if rangeIndex[:][0].size<=0:
-            return
-
-        self.__startLine = N.min(rangeIndex[:][0])-10
-        self.__endLine = N.max(rangeIndex[:][0])+10
-
-        if self.__startLine < 0:
-            self.__startLine = 0
-
-        lineCount = lat.shape[0]
-
-        if self.__endLine >= lineCount:
-            self.__endLine = lineCount-1
-
-
-        return
 
 
