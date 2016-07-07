@@ -31,8 +31,7 @@ class ProjProcessor(object):
 
 
     def OnParametersUpdate(self):
-
-
+        self.__projResult.NeedUpdate = True
         return
 
 
