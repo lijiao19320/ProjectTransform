@@ -84,9 +84,9 @@ class DataProvider(object):
     def Dispose(self):
         pass
 
-    def SetParameter(self, papameter):
-        papameter.register(self)
-        self.__parameter = papameter
+    def SetParameter(self, parameter):
+        parameter.register(self)
+        self.__parameter = parameter
 
         return
 

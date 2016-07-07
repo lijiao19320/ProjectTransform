@@ -72,8 +72,13 @@ static PyObject* cos_func_np(PyObject* self, PyObject* args)
 //           int * out_savedataptr = (int *)save_iter->dataptr;
 //           *(out_savedataptr) = *(refdataptr);
 
-            int index  =  (*(tvdataptr)) * width+*(tudataptr);
-            *(OD+index) = (short)(*(refdataptr));
+
+            if((short)(*(refdataptr))<65535)
+            {
+                int index  =  (*(tvdataptr)) * width+*(tudataptr);
+                *(OD+index) = (short)(*(refdataptr));
+            }
+
             PyArray_ITER_NEXT(tu_iter);
             PyArray_ITER_NEXT(tv_iter);
             PyArray_ITER_NEXT(ref_iter);
@@ -82,6 +87,7 @@ static PyObject* cos_func_np(PyObject* self, PyObject* args)
      }
 
     CFill_Gap_By_NeighbourPoint(OD,width,height,8,65535);
+    *OD = 999;
 
 //    CFill_Gap_By_InterpolatingAlongX(OD,width,height, 0 , 65535, 0);
     PyArray_ITER_NEXT(save_iter);

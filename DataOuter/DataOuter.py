@@ -6,6 +6,7 @@ class DataOuter(object):
 
     __UV = []
 
+    __Parameter = None
     def __init__(self):
         return
 
@@ -13,3 +14,18 @@ class DataOuter(object):
     def Save(self,projResult,dataProvider):
         pass
 
+
+
+    def setParameter(self, parameter):
+        parameter.register(self)
+        self.__Parameter = parameter
+        return
+
+    def getParameter(self):
+        return self.__Parameter
+
+    Parameter = property(getParameter, setParameter)
+
+    def OnParametersUpdate(self):
+
+        return

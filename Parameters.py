@@ -68,3 +68,6 @@ class ProjParameters(object):
 
     ProjRange = property(getProjRange,setProjRange)
 
+
+    ProjectResolution = 0
+

@@ -6,7 +6,7 @@ from ProjProcessor import *
 
 param = ProjParameters()
 param.DstProj = Proj(proj='merc',datum='WGS84',lon_0=145)
-param.ProjRange = ProjRange(0,60,-180,180)
+param.ProjRange = ProjRange(0,60,70,140)
 
 
 

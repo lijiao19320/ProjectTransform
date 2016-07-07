@@ -19,29 +19,32 @@ class ProjProcessor(object):
         self.__ProjParam = parameters
         self.__dataOuter = dataouter
 
+        if self.__ProjParam.ProjectResolution==0:
+            self.__ProjParam.ProjectResolution = dataprovider.GetResolution()
+
         self.__dataProvider.SetParameter(parameters)
 
+        self.__ProjParam.register(self)
 
         self.__ProjParam.data_changed()
         return
 
-    # def SetDataProvider(self,provider):
-    #     self.__dataProvider = provider
-    #
-    #
-    # def SetProjParameters(self,parameters):
-    #     self.__ProjParam = parameters
-    #
-    # def SetDataOut(self,out):l
-    #     self.__dataOuter = out
+
+    def OnParametersUpdate(self):
+
+
+        return
 
 
     def PerformProj(self):
         lat = self.__dataProvider.GetLatitude()
         lon = self.__dataProvider.GetLongitude()
 
-        masklat = ((lat[:,:]<= self.__ProjParam.ProjRange.MaxLat) & (lat[:,:]>= self.__ProjParam.ProjRange.MinLat))
+        masklat =(lat[:,:]<= self.__ProjParam.ProjRange.MaxLat) & (lat[:,:]>= self.__ProjParam.ProjRange.MinLat) & \
+                 (lon[:,:]<= self.__ProjParam.ProjRange.MaxLon) & (lon[:,:]>= self.__ProjParam.ProjRange.MinLon)
 
+
+        self.__projResult.LatLonRangeMask = masklat
 
         proj = self.__ProjParam.DstProj
         U, V = self.__ProjTransformer.LatlonToProjUV(lon,lat,proj)
