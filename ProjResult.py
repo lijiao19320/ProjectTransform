@@ -1,5 +1,5 @@
 import numpy as N
-import cos_module_np as SD
+import ProjOutputData_module as SD
 
 class ProjResult(object):
 
@@ -16,6 +16,7 @@ class ProjResult(object):
     __Height =0
     __tv = None
     __tu = None
+    __DataSearchTable = None
 
     def CalProjectMinMax(self, U, V):
 
@@ -55,9 +56,10 @@ class ProjResult(object):
             minU, minV, maxU, maxV=self.CalProjectMinMax(U[(self.LatLonRangeMask)], V[(self.LatLonRangeMask)])
             self.__Height, self.__Width = self.CalProjectWidthAndHeight( minU, minV, maxU, maxV,resolution)
             self.__tu, self.__tv = self.CalUVToIJ(resolution,U,V,minU,minV)
+            self.__DataSearchTable = SD.CreateOutputSearTable(int(self.__Width ), int(self.__Height), self.__tu[(self.LatLonRangeMask)], self.__tv[(self.LatLonRangeMask)])
             self.NeedUpdate = False
 
-        saveData = SD.cos_func_np(int(self.__Width ), int(self.__Height), self.__tu[(self.LatLonRangeMask)], self.__tv[(self.LatLonRangeMask)], refdata[(self.LatLonRangeMask)].astype(int))
+        saveData  = SD.CreateOutputData(int(self.__Width ), int(self.__Height),self.__DataSearchTable,refdata[(self.LatLonRangeMask)].astype(int))
 
         return saveData
 

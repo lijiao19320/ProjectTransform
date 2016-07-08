@@ -39,11 +39,11 @@ class ProjProcessor(object):
         lat = self.__dataProvider.GetLatitude()
         lon = self.__dataProvider.GetLongitude()
 
-        masklat =(lat[:,:]<= self.__ProjParam.ProjRange.MaxLat) & (lat[:,:]>= self.__ProjParam.ProjRange.MinLat) & \
+        rangemask =(lat[:,:]<= self.__ProjParam.ProjRange.MaxLat) & (lat[:,:]>= self.__ProjParam.ProjRange.MinLat) & \
                  (lon[:,:]<= self.__ProjParam.ProjRange.MaxLon) & (lon[:,:]>= self.__ProjParam.ProjRange.MinLon)
 
 
-        self.__projResult.LatLonRangeMask = masklat
+        self.__projResult.LatLonRangeMask = rangemask
 
         proj = self.__ProjParam.DstProj
         U, V = self.__ProjTransformer.LatlonToProjUV(lon,lat,proj)

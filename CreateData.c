@@ -6,7 +6,7 @@
 #include <stdint.h>
 
 /*  wrapped cosine function */
-static PyObject* cos_func_np(PyObject* self, PyObject* args)
+static PyObject* CreateOutputSearTable(PyObject* self, PyObject* args)
 {
 
     int width;
@@ -17,13 +17,12 @@ static PyObject* cos_func_np(PyObject* self, PyObject* args)
 
 
     /*  parse single numpy array argument */
-    if (!PyArg_ParseTuple(args, "iiO!O!O!",&width,&height, &PyArray_Type, &in_array_tu, &PyArray_Type, &in_array_tv,
-     &PyArray_Type, &in_array_refdata))
+    if (!PyArg_ParseTuple(args, "iiO!O!",&width,&height, &PyArray_Type, &in_array_tu, &PyArray_Type, &in_array_tv))
         return NULL;
 
       PyArrayIterObject *tu_iter = (PyArrayIterObject *)PyArray_IterNew((PyObject*)in_array_tu);
       PyArrayIterObject *tv_iter = (PyArrayIterObject* )PyArray_IterNew((PyObject*)in_array_tv);
-      PyArrayIterObject *ref_iter = (PyArrayIterObject *)PyArray_IterNew((PyObject*)in_array_refdata);
+//      PyArrayIterObject *ref_iter = (PyArrayIterObject *)PyArray_IterNew((PyObject*)in_array_refdata);
 
 
     npy_intp dims[2] = {height,width};
@@ -43,7 +42,7 @@ static PyObject* cos_func_np(PyObject* self, PyObject* args)
 //           PyArray_ITER_NEXT(save_iter);
 //    }
 
-    short *OD = malloc(sizeof(short)*count);
+    int *OD = malloc(sizeof(int)*count);
 
     for(index = 0;index<count;index++)
     {
@@ -64,7 +63,7 @@ static PyObject* cos_func_np(PyObject* self, PyObject* args)
             int * tvdataptr = (int *)tv_iter->dataptr;
 
 
-            int * refdataptr = (int *)ref_iter->dataptr;
+//            int * refdataptr = (int *)ref_iter->dataptr;
 
 //            npy_intp savedatadim[2] = {*(tvdataptr),*(tudataptr)};
 //
@@ -76,12 +75,13 @@ static PyObject* cos_func_np(PyObject* self, PyObject* args)
 //            if((short)(*(refdataptr))<65535)
             {
                 int index  =  (*(tvdataptr)) * width+*(tudataptr);
-                *(OD+index) = (short)(*(refdataptr));
+                //*(OD+index) = (int)(*(refdataptr));
+                *(OD+index) = i;
             }
 
             PyArray_ITER_NEXT(tu_iter);
             PyArray_ITER_NEXT(tv_iter);
-            PyArray_ITER_NEXT(ref_iter);
+//            PyArray_ITER_NEXT(ref_iter);
 
         }
      }
@@ -102,7 +102,7 @@ static PyObject* cos_func_np(PyObject* self, PyObject* args)
     /*  clean up and return the result */
     Py_DECREF(in_array_tu);
     Py_DECREF(in_array_tv);
-    Py_DECREF(in_array_refdata);
+//    Py_DECREF(in_array_refdata);
     Py_DECREF(save_iter);
     Py_INCREF(savedata);
     return savedata;
@@ -111,14 +111,94 @@ static PyObject* cos_func_np(PyObject* self, PyObject* args)
     fail:
         Py_XDECREF(in_array_tu);
         Py_XDECREF(in_array_tv);
-        Py_XDECREF(in_array_refdata);
+//        Py_XDECREF(in_array_refdata);
         return NULL;
 }
 
-/*  define functions in module */
-static PyMethodDef CosMethods[] =
+/*  wrapped cosine function */
+static PyObject* CreateOutputData(PyObject* self, PyObject* args)
 {
-     {"cos_func_np", cos_func_np, METH_VARARGS,
+
+    int width;
+    int height;
+    PyArrayObject *in_array_SearchTable;
+
+    PyArrayObject *in_array_refdata;
+
+
+    /*  parse single numpy array argument */
+    if (!PyArg_ParseTuple(args, "iiO!O!",&width,&height, &PyArray_Type, &in_array_SearchTable,
+     &PyArray_Type, &in_array_refdata))
+        return NULL;
+
+      PyArrayIterObject *Tabel_iter = (PyArrayIterObject *)PyArray_IterNew((PyObject*)in_array_SearchTable);
+
+      PyArrayIterObject *ref_iter = (PyArrayIterObject *)PyArray_IterNew((PyObject*)in_array_refdata);
+
+
+    npy_intp dims[2] = {height,width};
+
+    PyObject *savedata = PyArray_SimpleNew(2, dims, NPY_INT);
+
+    PyArrayIterObject *save_iter;
+    save_iter = (PyArrayIterObject *)PyArray_IterNew(savedata);
+
+    int count = height*width;
+
+    int i =0;
+
+    for( i =0 ;i < count;i++)
+     {
+
+        {
+
+
+            int * tabledataptr = (int *)Tabel_iter->dataptr;
+            int * savedataptr = (int *)save_iter->dataptr;
+
+
+
+
+            PyArray_ITER_GOTO1D(ref_iter,*tabledataptr);
+
+            int * refdataptr = (int *)ref_iter->dataptr;
+                //int index  =  (*(tvdataptr)) * width+*(tudataptr);
+                //*(OD+index) = (int)(*(refdataptr));
+             *(savedataptr) = *(refdataptr);
+
+            PyArray_ITER_NEXT(Tabel_iter);
+            PyArray_ITER_NEXT(save_iter);
+
+
+        }
+     }
+
+//    printf("testttt");
+    /*  clean up and return the result */
+    Py_DECREF(in_array_SearchTable);
+    Py_DECREF(in_array_refdata);
+    Py_DECREF(Tabel_iter);
+    Py_DECREF(ref_iter);
+    Py_DECREF(save_iter);
+
+    Py_INCREF(savedata);
+    return savedata;
+
+    /*  in case bad things happen */
+    fail:
+        Py_XDECREF(in_array_SearchTable);
+        Py_XDECREF(in_array_refdata);
+        Py_XDECREF(Tabel_iter);
+        return NULL;
+}
+
+
+/*  define functions in module */
+static PyMethodDef OutputDataMethods[] =
+{
+     {"CreateOutputSearTable", CreateOutputSearTable, METH_VARARGS,
+         "evaluate the cosine on a numpy array"},
+     {"CreateOutputData", CreateOutputData, METH_VARARGS,
          "evaluate the cosine on a numpy array"},
      {NULL, NULL, 0, NULL}
 };
@@ -126,26 +206,26 @@ static PyMethodDef CosMethods[] =
 /* module initialization */
 PyMODINIT_FUNC
 
-initcos_module_np(void)
+initProjOutputData_module(void)
 {
-     (void) Py_InitModule("cos_module_np", CosMethods);
+     (void) Py_InitModule("ProjOutputData_module", OutputDataMethods);
      /* IMPORTANT: this must be called */
      import_array();
 }
 
 
-void CFill_Gap_By_NeighbourPoint(unsigned short *lpDIBorigin, int iImgWidth, int iImgHeight, int iNumberOfRepeat, int iFillValue)
+void CFill_Gap_By_NeighbourPoint(int *lpDIBorigin, int iImgWidth, int iImgHeight, int iNumberOfRepeat, int iFillValue)
 {
     if(lpDIBorigin == NULL)    //DIB has not been allocated
 		return;
 
-	char   *pRowUp, *pRowMiddle, *pRowDown, *pRowBuffer,* pRowBuffer0;
-	unsigned short  *lpDataUp, *lpDataDown,*lpDIB;
+	int   *pRowUp, *pRowMiddle, *pRowDown, *pRowBuffer,* pRowBuffer0;
+	int *lpDataUp, *lpDataDown,*lpDIB;
 
 	//&
 	lpDataUp = NULL;
 
-	pRowBuffer0= ( char  * )malloc( iImgWidth * 3 );
+	pRowBuffer0= ( int  * )malloc( iImgWidth * 3 *sizeof(int));
 	pRowUp		= pRowBuffer0;
 	pRowMiddle  = pRowBuffer0 + iImgWidth;
 	pRowDown	= pRowBuffer0 + iImgWidth * 2;
