@@ -50,7 +50,7 @@ class ProjResult(object):
         return  tu,tv
 
 
-    def CreateSaveData(self, U, V, refdata,resolution):
+    def CreateSaveData(self, U, V, refdata,resolution,datatype):
 
         if self.NeedUpdate:
             minU, minV, maxU, maxV=self.CalProjectMinMax(U[(self.LatLonRangeMask)], V[(self.LatLonRangeMask)])
@@ -59,7 +59,7 @@ class ProjResult(object):
             self.__DataSearchTable = SD.CreateOutputSearTable(int(self.__Width ), int(self.__Height), self.__tu[(self.LatLonRangeMask)], self.__tv[(self.LatLonRangeMask)])
             self.NeedUpdate = False
 
-        saveData  = SD.CreateOutputData(int(self.__Width ), int(self.__Height),self.__DataSearchTable,refdata[(self.LatLonRangeMask)].astype(int))
+        saveData  = SD.CreateOutputData(int(self.__Width ), int(self.__Height),datatype,self.__DataSearchTable,refdata[(self.LatLonRangeMask)])
 
         return saveData
 

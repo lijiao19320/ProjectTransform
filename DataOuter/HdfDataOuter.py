@@ -54,21 +54,26 @@ class HdfDataOuter(DataOuter):
 
     def WriteData(self,datasetname,projResult,fileHandle,resolution):
         data = None
+        datatype =0
         if datasetname == 'EVB_Ref':
             data = self.__dataProvider.GetRefData(0)
         elif datasetname == 'SensorAzimuth':
             data = self.__dataProvider.GetSensorAzimuth()
+            datatype=1
         elif datasetname == 'SensorZenith':
             data = self.__dataProvider.GetSensorZenith()
+            datatype=1
         elif datasetname == 'SolarAzimuth':
             data = self.__dataProvider.GetSolarAzimuth()
+            datatype=1
         elif datasetname == 'SolarZenith':
             data = self.__dataProvider.GetSolarZenith()
+            datatype=1
 
         U = projResult.U
         V = projResult.V
         if data != None:
-            savedata = projResult.CreateSaveData(U, V, data,resolution)
+            savedata = projResult.CreateSaveData(U, V, data,resolution,datatype)
             self.__HdfOperator.WriteHdfDataset(fileHandle, '/', datasetname, savedata)
 
     def WriteAttribute(self,projResult):

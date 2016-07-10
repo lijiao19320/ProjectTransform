@@ -121,13 +121,14 @@ static PyObject* CreateOutputData(PyObject* self, PyObject* args)
 
     int width;
     int height;
+    int datatype;
     PyArrayObject *in_array_SearchTable;
 
     PyArrayObject *in_array_refdata;
 
 
     /*  parse single numpy array argument */
-    if (!PyArg_ParseTuple(args, "iiO!O!",&width,&height, &PyArray_Type, &in_array_SearchTable,
+    if (!PyArg_ParseTuple(args, "iiiO!O!",&width,&height, &datatype,&PyArray_Type, &in_array_SearchTable,
      &PyArray_Type, &in_array_refdata))
         return NULL;
 
@@ -138,8 +139,11 @@ static PyObject* CreateOutputData(PyObject* self, PyObject* args)
 
     npy_intp dims[2] = {height,width};
 
-    PyObject *savedata = PyArray_SimpleNew(2, dims, NPY_INT);
-
+    PyObject *savedata ;
+    if (datatype == 0)
+        savedata= PyArray_SimpleNew(2, dims, NPY_INT);
+    else
+        savedata= PyArray_SimpleNew(2, dims, NPY_CFLOAT);
     PyArrayIterObject *save_iter;
     save_iter = (PyArrayIterObject *)PyArray_IterNew(savedata);
 
@@ -154,17 +158,30 @@ static PyObject* CreateOutputData(PyObject* self, PyObject* args)
 
 
             int * tabledataptr = (int *)Tabel_iter->dataptr;
-            int * savedataptr = (int *)save_iter->dataptr;
+
 
 
 
 
             PyArray_ITER_GOTO1D(ref_iter,*tabledataptr);
 
-            int * refdataptr = (int *)ref_iter->dataptr;
                 //int index  =  (*(tvdataptr)) * width+*(tudataptr);
                 //*(OD+index) = (int)(*(refdataptr));
-             *(savedataptr) = *(refdataptr);
+
+
+            if (datatype == 0)
+            {
+                int * savedataptr = (int *)save_iter->dataptr;
+                int * refdataptr = (int *)ref_iter->dataptr;
+                *(savedataptr) = *(refdataptr);
+            }
+
+            else
+            {
+                float * savedataptr = (float *)save_iter->dataptr;
+                float * refdataptr = (float *)ref_iter->dataptr;
+                *(savedataptr) = *(refdataptr);
+            }
 
             PyArray_ITER_NEXT(Tabel_iter);
             PyArray_ITER_NEXT(save_iter);
