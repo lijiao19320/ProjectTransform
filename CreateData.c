@@ -27,7 +27,7 @@ static PyObject* CreateOutputSearTable(PyObject* self, PyObject* args)
 
     npy_intp dims[2] = {height,width};
 
-    PyObject *savedata = PyArray_SimpleNew(2, dims, NPY_INT);
+    PyObject *savedata = PyArray_SimpleNew(2, dims, NPY_INT32);
 
     PyArrayIterObject *save_iter;
     save_iter = (PyArrayIterObject *)PyArray_IterNew(savedata);
@@ -100,8 +100,10 @@ static PyObject* CreateOutputSearTable(PyObject* self, PyObject* args)
 
     free(OD);
     /*  clean up and return the result */
-    Py_DECREF(in_array_tu);
-    Py_DECREF(in_array_tv);
+//    Py_DECREF(in_array_tu);
+//    Py_DECREF(in_array_tv);
+    Py_DECREF(tv_iter);
+    Py_DECREF(tu_iter);
 //    Py_DECREF(in_array_refdata);
     Py_DECREF(save_iter);
     Py_INCREF(savedata);
@@ -109,9 +111,12 @@ static PyObject* CreateOutputSearTable(PyObject* self, PyObject* args)
 
     /*  in case bad things happen */
     fail:
-        Py_XDECREF(in_array_tu);
-        Py_XDECREF(in_array_tv);
-//        Py_XDECREF(in_array_refdata);
+
+        Py_XDECREF(tv_iter);
+        Py_XDECREF(tu_iter);
+    //    Py_DECREF(in_array_refdata);
+        Py_XDECREF(save_iter);
+        Py_XDECREF(savedata);
         return NULL;
 }
 
@@ -119,6 +124,7 @@ static PyObject* CreateOutputSearTable(PyObject* self, PyObject* args)
 static PyObject* CreateOutputData(PyObject* self, PyObject* args)
 {
 
+//    printf("beging create savedata  ");
     int width;
     int height;
     int datatype;
@@ -141,15 +147,22 @@ static PyObject* CreateOutputData(PyObject* self, PyObject* args)
 
     PyObject *savedata ;
     if (datatype == 0)
-        savedata= PyArray_SimpleNew(2, dims, NPY_INT);
+        savedata= PyArray_SimpleNew(2, dims, NPY_INT32);
     else
-        savedata= PyArray_SimpleNew(2, dims, NPY_CFLOAT);
+        savedata= PyArray_SimpleNew(2, dims, NPY_FLOAT32);
     PyArrayIterObject *save_iter;
     save_iter = (PyArrayIterObject *)PyArray_IterNew(savedata);
 
     int count = height*width;
 
     int i =0;
+//    int index = 0;
+//    for(index = 0;index<count;index++)
+//    {
+//         int * out_savedataptr = (int *)save_iter->dataptr;
+//         *(out_savedataptr) = 65535;
+//         PyArray_ITER_NEXT(save_iter);
+//    }
 
     for( i =0 ;i < count;i++)
      {
@@ -158,6 +171,7 @@ static PyObject* CreateOutputData(PyObject* self, PyObject* args)
 
 
             int * tabledataptr = (int *)Tabel_iter->dataptr;
+
 
 
 
@@ -192,20 +206,27 @@ static PyObject* CreateOutputData(PyObject* self, PyObject* args)
 
 //    printf("testttt");
     /*  clean up and return the result */
-    Py_DECREF(in_array_SearchTable);
-    Py_DECREF(in_array_refdata);
+//    Py_DECREF(in_array_SearchTable);
+//    Py_DECREF(in_array_refdata);
     Py_DECREF(Tabel_iter);
     Py_DECREF(ref_iter);
     Py_DECREF(save_iter);
-
+//
     Py_INCREF(savedata);
-    return savedata;
+
+//    printf("return savedata  ");
+
+    return Py_BuildValue("O", savedata);
+//    return savedata;
 
     /*  in case bad things happen */
     fail:
-        Py_XDECREF(in_array_SearchTable);
-        Py_XDECREF(in_array_refdata);
         Py_XDECREF(Tabel_iter);
+        Py_XDECREF(ref_iter);
+        Py_XDECREF(save_iter);
+    //
+        Py_XDECREF(savedata);
+        printf("AH~~~~~~~~~~~~Bad things happen!");
         return NULL;
 }
 

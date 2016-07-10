@@ -45,8 +45,8 @@ class ProjResult(object):
         rv = V*resolutionFactor
         minUF = minU*resolutionFactor
         minVF = minV*resolutionFactor
-        tu = (ru-minUF).astype(int)
-        tv = (rv-minVF).astype(int)
+        tu = (ru-minUF).astype(N.int32)
+        tv = (rv-minVF).astype(N.int32)
         return  tu,tv
 
 
@@ -59,7 +59,10 @@ class ProjResult(object):
             self.__DataSearchTable = SD.CreateOutputSearTable(int(self.__Width ), int(self.__Height), self.__tu[(self.LatLonRangeMask)], self.__tv[(self.LatLonRangeMask)])
             self.NeedUpdate = False
 
+
+
         saveData  = SD.CreateOutputData(int(self.__Width ), int(self.__Height),datatype,self.__DataSearchTable,refdata[(self.LatLonRangeMask)])
+
 
         return saveData
 

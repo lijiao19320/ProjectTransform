@@ -36,11 +36,16 @@ class HdfDataOuter(DataOuter):
 
 
         self.WriteData('EVB_Ref',projResult,fileHandle,resolution)
+        # self.WriteData('EVB_Ref1', projResult, fileHandle, resolution)
+        # self.WriteData('EVB_Ref2', projResult, fileHandle, resolution)
+        # self.WriteData('EVB_Ref3', projResult, fileHandle, resolution)
 
-        self.__HdfOperator.Close(fileHandle)
-        return
 
         self.WriteData('SensorAzimuth', projResult, fileHandle, resolution)
+
+        # self.__HdfOperator.Close(fileHandle)
+        # return
+
         self.WriteData('SensorZenith', projResult, fileHandle, resolution)
         self.WriteData('SolarAzimuth', projResult, fileHandle, resolution)
         self.WriteData('SolarZenith', projResult, fileHandle, resolution)
@@ -56,18 +61,24 @@ class HdfDataOuter(DataOuter):
         data = None
         datatype =0
         if datasetname == 'EVB_Ref':
-            data = self.__dataProvider.GetRefData(0)
+            data = (self.__dataProvider.GetRefData(0)).astype(N.int32)
+        if datasetname == 'EVB_Ref1':
+            data = (self.__dataProvider.GetRefData(1)).astype(N.int32)
+        if datasetname == 'EVB_Ref2':
+            data = (self.__dataProvider.GetRefData(2)).astype(N.int32)
+        if datasetname == 'EVB_Ref3':
+            data = (self.__dataProvider.GetRefData(3)).astype(N.int32)
         elif datasetname == 'SensorAzimuth':
-            data = self.__dataProvider.GetSensorAzimuth()
+            data = (self.__dataProvider.GetSensorAzimuth()).astype(N.float32)
             datatype=1
         elif datasetname == 'SensorZenith':
-            data = self.__dataProvider.GetSensorZenith()
+            data = (self.__dataProvider.GetSensorZenith()).astype(N.float32)
             datatype=1
         elif datasetname == 'SolarAzimuth':
-            data = self.__dataProvider.GetSolarAzimuth()
+            data = (self.__dataProvider.GetSolarAzimuth()).astype(N.float32)
             datatype=1
         elif datasetname == 'SolarZenith':
-            data = self.__dataProvider.GetSolarZenith()
+            data = (self.__dataProvider.GetSolarZenith()).astype(N.float32)
             datatype=1
 
         U = projResult.U
@@ -75,6 +86,7 @@ class HdfDataOuter(DataOuter):
         if data != None:
             savedata = projResult.CreateSaveData(U, V, data,resolution,datatype)
             self.__HdfOperator.WriteHdfDataset(fileHandle, '/', datasetname, savedata)
+            print 'Save '+datasetname
 
     def WriteAttribute(self,projResult):
 
