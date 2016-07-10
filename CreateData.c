@@ -22,8 +22,6 @@ static PyObject* CreateOutputSearTable(PyObject* self, PyObject* args)
 
       PyArrayIterObject *tu_iter = (PyArrayIterObject *)PyArray_IterNew((PyObject*)in_array_tu);
       PyArrayIterObject *tv_iter = (PyArrayIterObject* )PyArray_IterNew((PyObject*)in_array_tv);
-//      PyArrayIterObject *ref_iter = (PyArrayIterObject *)PyArray_IterNew((PyObject*)in_array_refdata);
-
 
     npy_intp dims[2] = {height,width};
 
@@ -35,20 +33,14 @@ static PyObject* CreateOutputSearTable(PyObject* self, PyObject* args)
     int index = 0;
     int count = width*height;
 
-//    for(index = 0;index<count;index++)
-//    {
-//            int * out_savedataptr = (int *)save_iter->dataptr;
-//           *(out_savedataptr) = 400;
-//           PyArray_ITER_NEXT(save_iter);
-//    }
 
     int *OD = malloc(sizeof(int)*count);
 
     for(index = 0;index<count;index++)
     {
-            //int * out_savedataptr = (int *)save_iter->dataptr;
+
            *(OD+index) = 65535;
-           //PyArray_ITER_NEXT(save_iter);
+
     }
 
     int i =0;
@@ -56,34 +48,17 @@ static PyObject* CreateOutputSearTable(PyObject* self, PyObject* args)
     for( i =0 ;i < tu_iter->size;i++)
      {
 
-        {
-
-
             int * tudataptr = (int *)tu_iter->dataptr;
             int * tvdataptr = (int *)tv_iter->dataptr;
 
+            int index  =  (*(tvdataptr)) * width+*(tudataptr);
 
-//            int * refdataptr = (int *)ref_iter->dataptr;
+            *(OD+index) = i;
 
-//            npy_intp savedatadim[2] = {*(tvdataptr),*(tudataptr)};
-//
-//            PyArray_ITER_GOTO(save_iter,savedatadim);
-//           int * out_savedataptr = (int *)save_iter->dataptr;
-//           *(out_savedataptr) = *(refdataptr);
-
-
-//            if((short)(*(refdataptr))<65535)
-            {
-                int index  =  (*(tvdataptr)) * width+*(tudataptr);
-                //*(OD+index) = (int)(*(refdataptr));
-                *(OD+index) = i;
-            }
 
             PyArray_ITER_NEXT(tu_iter);
             PyArray_ITER_NEXT(tv_iter);
-//            PyArray_ITER_NEXT(ref_iter);
 
-        }
      }
 
     CFill_Gap_By_NeighbourPoint(OD,width,height,8,65535);
@@ -156,32 +131,15 @@ static PyObject* CreateOutputData(PyObject* self, PyObject* args)
     int count = height*width;
 
     int i =0;
-//    int index = 0;
-//    for(index = 0;index<count;index++)
-//    {
-//         int * out_savedataptr = (int *)save_iter->dataptr;
-//         *(out_savedataptr) = 65535;
-//         PyArray_ITER_NEXT(save_iter);
-//    }
 
     for( i =0 ;i < count;i++)
      {
 
         {
 
-
             int * tabledataptr = (int *)Tabel_iter->dataptr;
 
-
-
-
-
-
             PyArray_ITER_GOTO1D(ref_iter,*tabledataptr);
-
-                //int index  =  (*(tvdataptr)) * width+*(tudataptr);
-                //*(OD+index) = (int)(*(refdataptr));
-
 
             if (datatype == 0)
             {
@@ -204,27 +162,24 @@ static PyObject* CreateOutputData(PyObject* self, PyObject* args)
         }
      }
 
-//    printf("testttt");
     /*  clean up and return the result */
 //    Py_DECREF(in_array_SearchTable);
 //    Py_DECREF(in_array_refdata);
     Py_DECREF(Tabel_iter);
     Py_DECREF(ref_iter);
     Py_DECREF(save_iter);
-//
+
     Py_INCREF(savedata);
 
-//    printf("return savedata  ");
 
-    return Py_BuildValue("O", savedata);
-//    return savedata;
-
+//    return Py_BuildValue("O", savedata);
+    return savedata;
     /*  in case bad things happen */
     fail:
         Py_XDECREF(Tabel_iter);
         Py_XDECREF(ref_iter);
         Py_XDECREF(save_iter);
-    //
+
         Py_XDECREF(savedata);
         printf("AH~~~~~~~~~~~~Bad things happen!");
         return NULL;
@@ -235,9 +190,9 @@ static PyObject* CreateOutputData(PyObject* self, PyObject* args)
 static PyMethodDef OutputDataMethods[] =
 {
      {"CreateOutputSearTable", CreateOutputSearTable, METH_VARARGS,
-         "evaluate the cosine on a numpy array"},
+         ""},
      {"CreateOutputData", CreateOutputData, METH_VARARGS,
-         "evaluate the cosine on a numpy array"},
+         ""},
      {NULL, NULL, 0, NULL}
 };
 
