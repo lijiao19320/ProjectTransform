@@ -21,8 +21,6 @@ class FY3AVirrProvider(DataProvider):
         super(FY3AVirrProvider,self).__init__()
         return
 
-    def Dispose(self):
-        return
 
     def SetFile(self,file):
 

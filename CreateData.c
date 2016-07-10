@@ -51,7 +51,7 @@ static PyObject* CreateOutputSearTable(PyObject* self, PyObject* args)
             int * tudataptr = (int *)tu_iter->dataptr;
             int * tvdataptr = (int *)tv_iter->dataptr;
 
-            int index  =  (*(tvdataptr)) * width+*(tudataptr);
+            int index  =  (height-(*tvdataptr)-1) * width+*(tudataptr);
 
             *(OD+index) = i;
 

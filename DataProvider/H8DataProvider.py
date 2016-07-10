@@ -45,13 +45,6 @@ class H8Dataprovider(DataProvider):
         self.OrbitInfo.EmissiveBandsCoun=0
         self.OrbitInfo.EmissiveBandsNames = ''
 
-    def Dispose(self):
-        self.__HdfOperator.Close(self.__lonFileHandle)
-        self.__HdfOperator.Close(self.__latFileHandle)
-        self.__HdfOperator.Close(self.__DataFileHandle)
-        self.__longitude = None
-        self.__latitude = None
-        return
 
     def SetFile(self,file):
         self.__latFileHandle = self.__HdfOperator.Open(file[0])
@@ -63,27 +56,13 @@ class H8Dataprovider(DataProvider):
 
     def GetLongitude(self):
 
-        startLine = self.startLine
-        endlLine = self.endLine
-        if self.__longitude== None:
-            self.__longitude = N.array(self.__HdfOperator.ReadHdfDataset(self.__lonFileHandle, '/', 'Lon'))
-
-        if startLine!=-1 & endlLine!=-1:
-            return  self.__longitude[startLine:endlLine:, :]
-        return self.__longitude
+        return self.GetDataSet(self.__lonFileHandle, '/', 'Lon')
 
 
 
     def GetLatitude(self):
-        startLine = self.startLine
-        endlLine = self.endLine
-        if self.__latitude== None:
-            self.__latitude = N.array(self.__HdfOperator.ReadHdfDataset(self.__latFileHandle, '/', 'Lat'))
 
-        if startLine!=-1 & endlLine!=-1:
-            return  self.__latitude[startLine:endlLine:, :]
-
-        return self.__latitude
+        return self.GetDataSet(self.__latFileHandle, '/', 'Lat')
 
 
     def GetResolution(self):
@@ -103,18 +82,18 @@ class H8Dataprovider(DataProvider):
 
         if bandname!='':
 
-            ret=self.GetDataSet('/', bandname)
+            ret=self.GetDataSet(self.__DataFileHandle,'/', bandname)
 
         return ret
 
     def GetSensorAzimuth(self):
 
-        return self.GetDataSet('/','NOMSatelliteAzimuth')
+        return self.GetDataSet(self.__DataFileHandle,'/','NOMSatelliteAzimuth')
 
 
-    def GetDataSet(self,group,ds):
+    def GetDataSet(self,filehandle,group,ds):
 
-        data = self.__HdfOperator.ReadHdfDataset(self.__DataFileHandle, group, ds)
+        data = self.__HdfOperator.ReadHdfDataset(filehandle, group, ds)
         startLine = self.startLine
         endlLine = self.endLine
         ret = None
@@ -125,13 +104,13 @@ class H8Dataprovider(DataProvider):
         return ret
 
     def GetSensorZenith(self):
-        return self.GetDataSet('/','NOMSatelliteZenith')
+        return self.GetDataSet(self.__DataFileHandle,'/','NOMSatelliteZenith')
 
     def GetSolarAzimuth(self):
-        return self.GetDataSet('/','NOMSunAzimuth')
+        return self.GetDataSet(self.__DataFileHandle,'/','NOMSunAzimuth')
 
     def GetSolarZenith(self):
-        return self.GetDataSet('/','NOMSunZenith')
+        return self.GetDataSet(self.__DataFileHandle,'/','NOMSunZenith')
 
     def GetEmissData(self, band):
         return

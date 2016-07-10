@@ -80,10 +80,6 @@ class DataProvider(object):
     def GetSolarZenith(self):
         pass
 
-    @abstractmethod
-    def Dispose(self):
-        pass
-
     def SetParameter(self, parameter):
         parameter.register(self)
         self.__parameter = parameter
