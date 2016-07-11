@@ -113,6 +113,7 @@ class H8Dataprovider(DataProvider):
         return self.GetDataSet(self.__DataFileHandle,'/','NOMSunZenith')
 
     def GetEmissData(self, band):
+        # return self.GetDataset(self.__DataFileHandle,'/',''
         return
 
     def GetFile(self):
