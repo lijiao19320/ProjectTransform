@@ -32,4 +32,3 @@ processor = ProjProcessor(provider,dataouter,param)
 processor.PerformProj()
 
 
-# todo：关于参数的解析，还是设计成xml的语言把，以前的实在是可读性太差，然后在写一个转换的函数作兼容

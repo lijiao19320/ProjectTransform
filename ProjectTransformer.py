@@ -26,6 +26,6 @@ class ProjTransformer(object):
         Zsrc = N.zeros(Xsrc.shape)
         Xdest,Ydest,Zdest = transform(srcProj, dstProj, Xsrc, Ysrc,Zsrc,6378137)
         # result = N.array(Xdest,Ydest)
-        # todo:等经纬度投影需要做
+
         return Xdest,Ydest
 
