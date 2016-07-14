@@ -68,16 +68,16 @@ class H8Dataprovider(DataProvider):
     def GetResolution(self):
         return 4000
 
-    def GetRefData(self, band):
+    def GetOBSData(self, band):
         bandname = ''
         ret = None
-        if band == 0:
+        if band == 'EVB1':
             bandname = 'NOMChannelVIS0064_4000'
-        elif band == 1:
+        elif band == 'EVB2':
             bandname = 'NOMChannelVIS0086_4000'
-        elif band == 2:
+        elif band == 'EVB3':
             bandname = 'NOMChannelVIS0160_4000'
-        elif band == 3:
+        elif band == 'EVB4':
             bandname = 'NOMChannelVIS0230_4000'
 
         if bandname!='':
@@ -85,6 +85,10 @@ class H8Dataprovider(DataProvider):
             ret=self.GetDataSet(self.__DataFileHandle,'/', bandname)
 
         return ret
+
+
+    def GetOBSDataCount(self):
+        return 4
 
     def GetSensorAzimuth(self):
 
@@ -112,8 +116,8 @@ class H8Dataprovider(DataProvider):
     def GetSolarZenith(self):
         return self.GetDataSet(self.__DataFileHandle,'/','NOMSunZenith')
 
-    def GetEmissData(self, band):
-        return
+    # def GetEmissData(self, band):
+    #     return
 
     def GetFile(self):
         return  self.__fileName

@@ -35,10 +35,10 @@ class HdfDataOuter(DataOuter):
         fileHandle = self.__HdfOperator.Open(savefilePath)
 
 
-        self.WriteData('EVB_Ref',projResult,fileHandle,resolution)
-        # self.WriteData('EVB_Ref1', projResult, fileHandle, resolution)
-        # self.WriteData('EVB_Ref2', projResult, fileHandle, resolution)
-        # self.WriteData('EVB_Ref3', projResult, fileHandle, resolution)
+        Evbcnt = dataProvider.GetOBSDataCount()+1
+        for i in xrange(1,Evbcnt):
+            self.WriteData('EVB'+str(i),projResult,fileHandle,resolution)
+
 
 
         self.WriteData('SensorAzimuth', projResult, fileHandle, resolution)
@@ -60,14 +60,9 @@ class HdfDataOuter(DataOuter):
     def WriteData(self,datasetname,projResult,fileHandle,resolution):
         data = None
         datatype =0
-        if datasetname == 'EVB_Ref':
-            data = (self.__dataProvider.GetRefData(0)).astype(N.int32)
-        if datasetname == 'EVB_Ref1':
-            data = (self.__dataProvider.GetRefData(1)).astype(N.int32)
-        if datasetname == 'EVB_Ref2':
-            data = (self.__dataProvider.GetRefData(2)).astype(N.int32)
-        if datasetname == 'EVB_Ref3':
-            data = (self.__dataProvider.GetRefData(3)).astype(N.int32)
+        if 'EVB' in datasetname:
+            data = (self.__dataProvider.GetOBSData(datasetname)).astype(N.int32)
+
         elif datasetname == 'SensorAzimuth':
             data = (self.__dataProvider.GetSensorAzimuth()).astype(N.float32)
             datatype=1

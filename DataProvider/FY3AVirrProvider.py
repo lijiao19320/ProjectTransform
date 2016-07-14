@@ -51,10 +51,14 @@ class FY3AVirrProvider(DataProvider):
     def GetSolarZenith(self):
         return
 
-    def GetRefData(self, band):
+    def GetOBSData(self, band):
         if self.__RefData == None:
             self.__RefData = self.__HdfOperator.ReadHdfDataset(self.__filehandel, '/', 'EV_RefSB')
         return self.__RefData[band,:,:]
+
+
+    def GetOBSDataCount(self):
+        return 1
 
     def GetResolution(self):
         return 1000
