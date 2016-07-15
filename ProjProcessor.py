@@ -24,6 +24,8 @@ class ProjProcessor(object):
 
         self.__dataProvider.SetParameter(parameters)
 
+        self.__dataOuter.Parameter=parameters
+
         self.__ProjParam.register(self)
 
         self.__ProjParam.data_changed()
@@ -38,6 +40,7 @@ class ProjProcessor(object):
     def PerformProj(self):
         lat = self.__dataProvider.GetLatitude()
         lon = self.__dataProvider.GetLongitude()
+
 
         rangemask =(lat[:,:]<= self.__ProjParam.ProjRange.MaxLat) & (lat[:,:]>= self.__ProjParam.ProjRange.MinLat) & \
                  (lon[:,:]<= self.__ProjParam.ProjRange.MaxLon) & (lon[:,:]>= self.__ProjParam.ProjRange.MinLon)

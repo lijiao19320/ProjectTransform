@@ -26,11 +26,11 @@ class H8Dataprovider(DataProvider):
         self.OrbitInfo.Sensor = 'H8'
         self.OrbitInfo.OrbitDirection= ''
 
-        self.OrbitInfo.Width = 2750
-        self.OrbitInfo.Height = 2750
+        self.OrbitInfo.Width = 5500
+        self.OrbitInfo.Height = 5500
 
         solarzenith = self.GetSolarZenith();
-        if solarzenith[int(2750/2),int(2750/2)] <=85:
+        if solarzenith[int(5500/2),int(5500/2)] <=85:
             self.OrbitInfo.DNFlag = 'D'
         else:
             self.OrbitInfo.DNFlag = 'N'
@@ -66,19 +66,19 @@ class H8Dataprovider(DataProvider):
 
 
     def GetResolution(self):
-        return 4000
+        return 2000
 
     def GetOBSData(self, band):
         bandname = ''
         ret = None
         if band == 'EVB1':
-            bandname = 'NOMChannelVIS0064_4000'
+            bandname = 'NOMChannelVIS0064_2000'
         elif band == 'EVB2':
-            bandname = 'NOMChannelVIS0086_4000'
+            bandname = 'NOMChannelVIS0086_2000'
         elif band == 'EVB3':
-            bandname = 'NOMChannelVIS0160_4000'
+            bandname = 'NOMChannelVIS0160_2000'
         elif band == 'EVB4':
-            bandname = 'NOMChannelVIS0230_4000'
+            bandname = 'NOMChannelVIS0230_2000'
 
         if bandname!='':
 

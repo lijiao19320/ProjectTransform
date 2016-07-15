@@ -3,9 +3,6 @@ from HdfOperator import *
 from DataProvider.DataProvider import *
 import numpy as N
 
-from scipy.interpolate import griddata
-from scipy.weave import inline
-from scipy.weave import converters
 
 class HdfDataOuter(DataOuter):
 
@@ -22,17 +19,19 @@ class HdfDataOuter(DataOuter):
         self.__dataProvider = dataProvider
 
         resolution = self.__dataProvider.GetResolution()
-        savefilePath = self.__dataProvider.GetFile()
+        para = self.getParameter()
 
-        savePath,saveFile =  os.path.split(savefilePath)
+        savefile = self.__dataProvider.GetFile()
+
+        savePath,saveFile =  os.path.split(savefile)
         saveFile = saveFile.upper()
-        saveFile=saveFile.replace('.HDF','Proj.HDF')
+        saveFile=saveFile.replace('.HDF','_Proj.HDF')
 
-        savefilePath = savePath+'/'+saveFile
-        if os.path.exists(savefilePath):
-            os.remove(savefilePath)
+        savefile = para.OutputPath+saveFile
+        if os.path.exists(savefile):
+            os.remove(savefile)
 
-        fileHandle = self.__HdfOperator.Open(savefilePath)
+        fileHandle = self.__HdfOperator.Open(savefile)
 
 
         Evbcnt = dataProvider.GetOBSDataCount()+1
@@ -41,14 +40,14 @@ class HdfDataOuter(DataOuter):
 
 
 
-        self.WriteData('SensorAzimuth', projResult, fileHandle, resolution)
+        # self.WriteData('SensorAzimuth', projResult, fileHandle, resolution)
 
         # self.__HdfOperator.Close(fileHandle)
         # return
-
-        self.WriteData('SensorZenith', projResult, fileHandle, resolution)
-        self.WriteData('SolarAzimuth', projResult, fileHandle, resolution)
-        self.WriteData('SolarZenith', projResult, fileHandle, resolution)
+        #
+        # self.WriteData('SensorZenith', projResult, fileHandle, resolution)
+        # self.WriteData('SolarAzimuth', projResult, fileHandle, resolution)
+        # self.WriteData('SolarZenith', projResult, fileHandle, resolution)
 
         for attr in projResult.ResultInfo.keys():
             self.__HdfOperator.WriteHdfAttribute(fileHandle,attr,projResult.ResultInfo[attr])

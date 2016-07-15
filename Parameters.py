@@ -68,6 +68,7 @@ class ProjParameters(object):
 
     ProjRange = property(getProjRange,setProjRange)
 
+    OutputPath = '/'
 
     ProjectResolution = 0
 

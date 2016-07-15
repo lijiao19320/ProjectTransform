@@ -93,13 +93,15 @@ class DataProvider(object):
         lat = self.GetLatitude()
         minlat = self.__parameter.ProjRange.MinLat
         maxlat = self.__parameter.ProjRange.MaxLat
+
+
         rangeIndex = N.where((minlat<=lat) & (lat<=maxlat))
 
-        if rangeIndex[:][0].size<=0:
+        if rangeIndex[0][:].size<=0:
             return
 
-        self.startLine = N.min(rangeIndex[:][0])-10
-        self.endLine = N.max(rangeIndex[:][0])+10
+        self.startLine = N.min(rangeIndex[0][:])-10
+        self.endLine = N.max(rangeIndex[0][:])+10
 
         if self.startLine < 0:
             self.startLine = 0
