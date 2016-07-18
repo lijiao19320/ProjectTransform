@@ -75,10 +75,10 @@ class HdfDataOuter(DataOuter):
             data = (self.__dataProvider.GetSolarZenith()).astype(N.float32)
             datatype=1
 
-        U = projResult.U
-        V = projResult.V
+        # U = projResult.U
+        # V = projResult.V
         if data != None:
-            savedata = projResult.CreateSaveData(U, V, data,resolution,datatype)
+            savedata = projResult.CreateSaveData(data,resolution,datatype)
             self.__HdfOperator.WriteHdfDataset(fileHandle, '/', datasetname, savedata)
             print 'Save '+datasetname
 

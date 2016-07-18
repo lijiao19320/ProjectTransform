@@ -5,9 +5,10 @@ from ProjProcessor import *
 
 
 param = ProjParameters()
+# param.DstProj = Proj(proj='latlong',datum='WGS84',lon_0=145)
 param.DstProj = Proj(proj='merc',datum='WGS84',lon_0=145)
 # param.ProjRange = ProjRange(0,60,70,140)
-param.ProjRange = ProjRange(-60,60,-180,180)
+param.ProjRange = ProjRange(0,60,40,170)
 param.OutputPath = '/mnt/hgfs/Vmware Linux/Data/'
 
 # file = '/mnt/hgfs/Vmware Linux/Data/FY3A_VIRRX_GBAL_L1_20090427_0255_1000M_MS.HDF'

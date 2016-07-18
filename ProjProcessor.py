@@ -53,7 +53,7 @@ class ProjProcessor(object):
 
         self.__projResult.U = U
         self.__projResult.V = V
-
+        self.__projResult.SetDstProj(proj)
 
         self.CreateResultInfo()
         self.__dataOuter.Save(self.__projResult,self.__dataProvider)

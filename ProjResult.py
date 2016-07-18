@@ -12,11 +12,21 @@ class ProjResult(object):
 
     NeedUpdate = True
 
+    __DstProj = None
+
     __Width = 0
     __Height =0
     __tv = None
     __tu = None
     __DataSearchTable = None
+    __IslatlongProj = False
+
+    __latlonResRate = float(360)/float(40075.02*1000)
+
+    def SetDstProj(self,dstProj):
+        self.__DstProj = dstProj
+        if 'latlong' in dstProj.srs:
+            self.__IslatlongProj = True
 
     def CalProjectMinMax(self, U, V):
 
@@ -37,6 +47,9 @@ class ProjResult(object):
         Height = round((maxV- minV) / resolution+ 0.5)
         Width = round((maxU- minU) / resolution+ 0.5)
 
+        if self.__IslatlongProj:
+            latlonres = self.__latlonResRate*resolution
+
         return Height,Width
 
     def CalUVToIJ(self,resolution,U,V,minU,minV):
@@ -50,19 +63,18 @@ class ProjResult(object):
         return  tu,tv
 
 
-    def CreateSaveData(self, U, V, refdata,resolution,datatype):
+    def CreateSaveData(self, refdata,resolution,datatype):
 
         if self.NeedUpdate:
-            minU, minV, maxU, maxV=self.CalProjectMinMax(U[(self.LatLonRangeMask)], V[(self.LatLonRangeMask)])
+            minU, minV, maxU, maxV=self.CalProjectMinMax(self.U[(self.LatLonRangeMask)], self.V[(self.LatLonRangeMask)])
             self.__Height, self.__Width = self.CalProjectWidthAndHeight( minU, minV, maxU, maxV,resolution)
-            self.__tu, self.__tv = self.CalUVToIJ(resolution,U,V,minU,minV)
+            self.__tu, self.__tv = self.CalUVToIJ(resolution,self.U,self.V,minU,minV)
             self.__DataSearchTable = SD.CreateOutputSearTable(int(self.__Width ), int(self.__Height), self.__tu[(self.LatLonRangeMask)], self.__tv[(self.LatLonRangeMask)])
             self.NeedUpdate = False
-
-
 
         saveData  = SD.CreateOutputData(int(self.__Width ), int(self.__Height),datatype,self.__DataSearchTable,refdata[(self.LatLonRangeMask)])
 
 
         return saveData
+
 
