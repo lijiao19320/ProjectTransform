@@ -12,12 +12,12 @@ class ProjTransformer(object):
         V=[]
         srcProj =Proj(proj='latlong',datum='WGS84')
 
-        if lon.ndim == 1 :
+        if 'latlong' in dstproj.srs:
+           return  lon,lat
 
-            # projUV = dstproj(lon[:]*self.DEG2RAD, lat[:]*self.DEG2RAD)l
+        if lon.ndim == 1 :
             U,V = self.ProjectTransform(lon[:]*self.DEG2RAD,lat[:]*self.DEG2RAD,srcProj,dstproj)
         elif lon.ndim == 2:
-            # projUV = dstproj(lon[:, :] * self.DEG2RAD, lat[:, :] * self.DEG2RAD)l
             U, V = self.ProjectTransform(lon[:, :] * self.DEG2RAD, lat[:, :]* self.DEG2RAD, srcProj, dstproj)
 
         return U,V
@@ -25,11 +25,9 @@ class ProjTransformer(object):
 
     def ProjectTransform(self,Xsrc,Ysrc,srcProj,dstProj):
 
-        if 'latlong' in dstProj.srs:
-            return Xsrc, Ysrc
-        else:
-            Zsrc = N.zeros(Xsrc.shape)
-            Xdest,Ydest,Zdest = transform(srcProj, dstProj, Xsrc, Ysrc,Zsrc,6378137)
 
-            return Xdest,Ydest
+        Zsrc = N.zeros(Xsrc.shape)
+        Xdest,Ydest,Zdest = transform(srcProj, dstProj, Xsrc, Ysrc,Zsrc,6378137)
+
+        return Xdest,Ydest
 

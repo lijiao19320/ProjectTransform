@@ -13,8 +13,8 @@ class H8Dataprovider(DataProvider):
     __fileName = None
     __longitude = None
     __latitude = None
-
-
+    __dataRes = 4000
+    __dataWidthAndHeight= 2750
 
 
     def __init__(self):
@@ -26,11 +26,11 @@ class H8Dataprovider(DataProvider):
         self.OrbitInfo.Sensor = 'H8'
         self.OrbitInfo.OrbitDirection= ''
 
-        self.OrbitInfo.Width = 5500
-        self.OrbitInfo.Height = 5500
+        self.OrbitInfo.Width = self.__dataWidthAndHeight
+        self.OrbitInfo.Height = self.__dataWidthAndHeight
 
         solarzenith = self.GetSolarZenith();
-        if solarzenith[int(5500/2),int(5500/2)] <=85:
+        if solarzenith[int(self.__dataWidthAndHeight/2),int(self.__dataWidthAndHeight/2)] <=85:
             self.OrbitInfo.DNFlag = 'D'
         else:
             self.OrbitInfo.DNFlag = 'N'
@@ -51,6 +51,10 @@ class H8Dataprovider(DataProvider):
         self.__lonFileHandle = self.__HdfOperator.Open(file[1])
         self.__DataFileHandle = self.__HdfOperator.Open(file[2])
         self.__fileName = file[2]
+        if '_2000M_' in self.__fileName:
+            self.__dataRes = 2000
+            self.__dataWidthAndHeight = 5500
+
         self.__InitOrbitInfo()
 
 
@@ -66,11 +70,25 @@ class H8Dataprovider(DataProvider):
 
 
     def GetResolution(self):
-        return 2000
+        return self.__dataRes
 
     def GetOBSData(self, band):
         bandname = ''
+
+        if self.__dataRes == 2000:
+            bandname = self.__GetOBSDatasetName2KM(band)
+        else:
+            bandname = self.__GetOBSDatasetName4KM(band)
+
         ret = None
+        if bandname!='':
+
+            ret=self.GetDataSet(self.__DataFileHandle,'/', bandname)
+
+        return ret
+
+    def __GetOBSDatasetName2KM(self,band):
+        bandname = ''
         if band == 'EVB1':
             bandname = 'NOMChannelVIS0064_2000'
         elif band == 'EVB2':
@@ -80,12 +98,20 @@ class H8Dataprovider(DataProvider):
         elif band == 'EVB4':
             bandname = 'NOMChannelVIS0230_2000'
 
-        if bandname!='':
+        return  bandname
 
-            ret=self.GetDataSet(self.__DataFileHandle,'/', bandname)
+    def __GetOBSDatasetName4KM(self, band):
+        bandname = ''
+        if band == 'EVB1':
+            bandname = 'NOMChannelVIS0064_4000'
+        elif band == 'EVB2':
+            bandname = 'NOMChannelVIS0086_4000'
+        elif band == 'EVB3':
+            bandname = 'NOMChannelVIS0160_4000'
+        elif band == 'EVB4':
+            bandname = 'NOMChannelVIS0230_4000'
 
-        return ret
-
+        return bandname
 
     def GetOBSDataCount(self):
         return 4

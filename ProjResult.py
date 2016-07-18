@@ -43,12 +43,10 @@ class ProjResult(object):
 
     def CalProjectWidthAndHeight(self,minU,minV,maxU,maxV,resolution):
 
-
         Height = round((maxV- minV) / resolution+ 0.5)
         Width = round((maxU- minU) / resolution+ 0.5)
 
-        if self.__IslatlongProj:
-            latlonres = self.__latlonResRate*resolution
+
 
         return Height,Width
 
@@ -65,10 +63,14 @@ class ProjResult(object):
 
     def CreateSaveData(self, refdata,resolution,datatype):
 
+        res = resolution
+        if self.__IslatlongProj:
+            res = self.__latlonResRate*resolution
+
         if self.NeedUpdate:
             minU, minV, maxU, maxV=self.CalProjectMinMax(self.U[(self.LatLonRangeMask)], self.V[(self.LatLonRangeMask)])
-            self.__Height, self.__Width = self.CalProjectWidthAndHeight( minU, minV, maxU, maxV,resolution)
-            self.__tu, self.__tv = self.CalUVToIJ(resolution,self.U,self.V,minU,minV)
+            self.__Height, self.__Width = self.CalProjectWidthAndHeight( minU, minV, maxU, maxV,res)
+            self.__tu, self.__tv = self.CalUVToIJ(res,self.U,self.V,minU,minV)
             self.__DataSearchTable = SD.CreateOutputSearTable(int(self.__Width ), int(self.__Height), self.__tu[(self.LatLonRangeMask)], self.__tv[(self.LatLonRangeMask)])
             self.NeedUpdate = False
 
