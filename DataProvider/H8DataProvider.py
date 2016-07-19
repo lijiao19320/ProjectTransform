@@ -15,6 +15,7 @@ class H8Dataprovider(DataProvider):
     __latitude = None
     __dataRes = 4000
     __dataWidthAndHeight= 2750
+    __obsDataCount = 4
 
 
     def __init__(self):
@@ -29,7 +30,7 @@ class H8Dataprovider(DataProvider):
         self.OrbitInfo.Width = self.__dataWidthAndHeight
         self.OrbitInfo.Height = self.__dataWidthAndHeight
 
-        solarzenith = self.GetSolarZenith();
+        solarzenith = self.GetSolarZenith()
         if solarzenith[int(self.__dataWidthAndHeight/2),int(self.__dataWidthAndHeight/2)] <=85:
             self.OrbitInfo.DNFlag = 'D'
         else:
@@ -54,6 +55,7 @@ class H8Dataprovider(DataProvider):
         if '_2000M_' in self.__fileName:
             self.__dataRes = 2000
             self.__dataWidthAndHeight = 5500
+            self.__obsDataCount = 16
 
         self.__InitOrbitInfo()
 
@@ -90,13 +92,37 @@ class H8Dataprovider(DataProvider):
     def __GetOBSDatasetName2KM(self,band):
         bandname = ''
         if band == 'EVB1':
-            bandname = 'NOMChannelVIS0064_2000'
+            bandname = 'NOMChannelVIS0046_2000'
         elif band == 'EVB2':
-            bandname = 'NOMChannelVIS0086_2000'
+            bandname = 'NOMChannelVIS0051_2000'
         elif band == 'EVB3':
-            bandname = 'NOMChannelVIS0160_2000'
+            bandname = 'NOMChannelVIS0064_2000'
         elif band == 'EVB4':
+            bandname = 'NOMChannelVIS0086_2000'
+        elif band == 'EVB5':
+            bandname = 'NOMChannelVIS0160_2000'
+        elif band == 'EVB6':
             bandname = 'NOMChannelVIS0230_2000'
+        elif band == 'EVB7':
+            bandname = 'NOMChannelIRX0390_2000'
+        elif band == 'EVB8':
+            bandname = 'NOMChannelIRX0620_2000'
+        elif band == 'EVB9':
+            bandname = 'NOMChannelIRX0700_2000'
+        elif band == 'EVB10':
+            bandname = 'NOMChannelIRX0730_2000'
+        elif band == 'EVB11':
+            bandname = 'NOMChannelIRX0860_2000'
+        elif band == 'EVB12':
+            bandname = 'NOMChannelIRX0960_2000'
+        elif band == 'EVB13':
+            bandname = 'NOMChannelIRX1040_2000'
+        elif band == 'EVB14':
+            bandname = 'NOMChannelIRX1120_2000'
+        elif band == 'EVB15':
+            bandname = 'NOMChannelIRX1230_2000'
+        elif band == 'EVB16':
+            bandname = 'NOMChannelIRX1330_2000'
 
         return  bandname
 
@@ -114,7 +140,7 @@ class H8Dataprovider(DataProvider):
         return bandname
 
     def GetOBSDataCount(self):
-        return 4
+        return self.__obsDataCount
 
     def GetSensorAzimuth(self):
 
