@@ -21,7 +21,9 @@ class ProjResult(object):
     __DataSearchTable = None
     __IslatlongProj = False
 
-    __latlonResRate = float(360)/float(40075.02*1000)
+    # __latlonResRate = float(360)/float(40075.02*1000)
+
+    __latlonResRate = float(0.01)/float(1000)
 
     def SetDstProj(self,dstProj):
         self.__DstProj = dstProj
