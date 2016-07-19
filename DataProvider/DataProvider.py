@@ -10,14 +10,10 @@ class OrbitInfo(object):
         self.DNFlag = ''
         self.Date=''
         self.Time=''
-        self.BandsCount = 0
-        self.Band_name=''
-        self.RefSBBandsCount = 0
         self.Width = 0
         self.Height = 0
-        self.RefSBBandsNames = ''
-        self.EmissiveBandsCoun=0
-        self.EmissiveBandsNames = ''
+        self.BandsWavelength=dict()
+        self.BandsType=dict()
 
 
 class DataProvider(object):

@@ -38,14 +38,8 @@ class H8Dataprovider(DataProvider):
 
         self.OrbitInfo.Date=''
         self.OrbitInfo.Time=''
-        self.OrbitInfo.BandsCount = 16
-        self.OrbitInfo.Band_name=''
-        self.OrbitInfo.RefSBBandsCount = 0
 
-        self.OrbitInfo.RefSBBandsNames = ''
-        self.OrbitInfo.EmissiveBandsCoun=0
-        self.OrbitInfo.EmissiveBandsNames = ''
-
+        self.CreateBandsInfo2KM()
 
     def SetFile(self,file):
         self.__latFileHandle = self.__HdfOperator.Open(file[0])
@@ -59,11 +53,45 @@ class H8Dataprovider(DataProvider):
 
         self.__InitOrbitInfo()
 
+    def CreateBandsInfo2KM(self):
+        self.OrbitInfo.BandsWavelength['EVB1'] = '0046'
+        self.OrbitInfo.BandsWavelength['EVB2'] = '0051'
+        self.OrbitInfo.BandsWavelength['EVB3'] = '0064'
+        self.OrbitInfo.BandsWavelength['EVB4'] = '0086'
+        self.OrbitInfo.BandsWavelength['EVB5'] = '0160'
+        self.OrbitInfo.BandsWavelength['EVB6'] = '0230'
+        self.OrbitInfo.BandsWavelength['EVB7'] = '0390'
+        self.OrbitInfo.BandsWavelength['EVB8'] = '0620'
+        self.OrbitInfo.BandsWavelength['EVB9'] = '0700'
+        self.OrbitInfo.BandsWavelength['EVB10'] = '0730'
+        self.OrbitInfo.BandsWavelength['EVB11'] = '0860'
+        self.OrbitInfo.BandsWavelength['EVB12'] = '0960'
+        self.OrbitInfo.BandsWavelength['EVB13'] = '1040'
+        self.OrbitInfo.BandsWavelength['EVB14'] = '1120'
+        self.OrbitInfo.BandsWavelength['EVB15'] = '1230'
+        self.OrbitInfo.BandsWavelength['EVB16'] = '1330'
+
+        self.OrbitInfo.BandsType['EVB1'] = 'REF'
+        self.OrbitInfo.BandsType['EVB2'] = 'REF'
+        self.OrbitInfo.BandsType['EVB3'] = 'REF'
+        self.OrbitInfo.BandsType['EVB4'] = 'REF'
+        self.OrbitInfo.BandsType['EVB5'] = 'REF'
+        self.OrbitInfo.BandsType['EVB6'] = 'REF'
+        self.OrbitInfo.BandsType['EVB7'] = 'EMIS'
+        self.OrbitInfo.BandsType['EVB8'] = 'EMIS'
+        self.OrbitInfo.BandsType['EVB9'] = 'EMIS'
+        self.OrbitInfo.BandsType['EVB10'] = 'EMIS'
+        self.OrbitInfo.BandsType['EVB11'] = 'EMIS'
+        self.OrbitInfo.BandsType['EVB12'] = 'EMIS'
+        self.OrbitInfo.BandsType['EVB13'] = 'EMIS'
+        self.OrbitInfo.BandsType['EVB14'] = 'EMIS'
+        self.OrbitInfo.BandsType['EVB15'] = 'EMIS'
+        self.OrbitInfo.BandsType['EVB16'] = 'EMIS'
+
 
     def GetLongitude(self):
 
         return self.GetDataSet(self.__lonFileHandle, '/', 'Lon')
-
 
 
     def GetLatitude(self):

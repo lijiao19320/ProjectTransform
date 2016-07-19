@@ -34,10 +34,11 @@ class HdfDataOuter(DataOuter):
         fileHandle = self.__HdfOperator.Open(savefile)
 
 
+
         Evbcnt = dataProvider.GetOBSDataCount()+1
         for i in xrange(1,Evbcnt):
-            self.WriteData('EVB'+str(i),projResult,fileHandle,resolution)
-
+            self.WriteDataset('EVB' + str(i), projResult, fileHandle, resolution)
+            self.WriteDatasetAttribute(fileHandle,'EVB' + str(i))
 
 
         # self.WriteData('SensorAzimuth', projResult, fileHandle, resolution)
@@ -50,13 +51,13 @@ class HdfDataOuter(DataOuter):
         # self.WriteData('SolarZenith', projResult, fileHandle, resolution)
 
         for attr in projResult.ResultInfo.keys():
-            self.__HdfOperator.WriteHdfAttribute(fileHandle,attr,projResult.ResultInfo[attr])
+            self.__HdfOperator.WriteHdfGroupAttribute(fileHandle, attr, projResult.ResultInfo[attr])
         # self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'U', U)
         # self.__HdfOperator.WriteHdfDataset(fileHandle, '/', 'V', V)
         self.__HdfOperator.Close(fileHandle)
         return
 
-    def WriteData(self,datasetname,projResult,fileHandle,resolution):
+    def WriteDataset(self, datasetname, projResult, fileHandle, resolution):
         data = None
         datatype =0
         if 'EVB' in datasetname:
@@ -80,10 +81,16 @@ class HdfDataOuter(DataOuter):
         if data != None:
             savedata = projResult.CreateSaveData(data,resolution,datatype)
             self.__HdfOperator.WriteHdfDataset(fileHandle, '/', datasetname, savedata)
+
             print 'Save '+datasetname
 
-    def WriteAttribute(self,projResult):
-
+    def WriteDatasetAttribute(self,fileHandle,datasetname):
+        if 'EVB' in datasetname:
+            orbitInfo = self.__dataProvider.OrbitInfo
+            self.__HdfOperator.WriteHdfDatasetAttribute(fileHandle, '/', datasetname, 'WaveLength', orbitInfo.BandsWavelength[datasetname])
+            bandstype = orbitInfo.BandsType[datasetname]
+            if bandstype == 'REF':
+                self.__HdfOperator.WriteHdfDatasetAttribute(fileHandle, '/', datasetname, 'slope',0.001)
         return
 
 
