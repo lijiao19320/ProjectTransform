@@ -42,7 +42,7 @@ class H8Dataprovider(DataProvider):
         self.OrbitInfo.Date=''
         self.OrbitInfo.Time=''
 
-        self.CreateBandsInfo2KM()
+        self.CreateBandsInfo()
 
     def SetFile(self,file):
         self.__latFileHandle = self.__HdfOperator.Open(file[0])
@@ -62,7 +62,7 @@ class H8Dataprovider(DataProvider):
         self.__InitOrbitInfo()
 
 
-    def CreateBandsInfo2KM(self):
+    def CreateBandsInfo(self):
 
         index  = 1
         for wavelength in self.__waveLenthlist:
