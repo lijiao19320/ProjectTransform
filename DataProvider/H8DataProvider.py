@@ -18,8 +18,11 @@ class H8Dataprovider(DataProvider):
     __obsDataCount = 4
 
 
+    __waveLenthlist = None
+
     def __init__(self):
         super(H8Dataprovider,self).__init__()
+
         return
 
     def __InitOrbitInfo(self):
@@ -50,43 +53,25 @@ class H8Dataprovider(DataProvider):
             self.__dataRes = 2000
             self.__dataWidthAndHeight = 5500
             self.__obsDataCount = 16
+            self.__waveLenthlist = ['0046', '0051', '0064', '0086', '0160', '0230', '0390', '0620', '0700', '0730',
+                                    '0860','0960','1040', '1120', '1230', '1330']
+        else:
+            self.__waveLenthlist = ['0046', '0051', '0064', '0086', '0160', '0230', '0390', '0620', '0700', '0730',
+                                    '0860', '0960', '1040', '1120', '1230', '1330']
 
         self.__InitOrbitInfo()
 
-    def CreateBandsInfo2KM(self):
-        self.OrbitInfo.BandsWavelength['EVB1'] = '0046'
-        self.OrbitInfo.BandsWavelength['EVB2'] = '0051'
-        self.OrbitInfo.BandsWavelength['EVB3'] = '0064'
-        self.OrbitInfo.BandsWavelength['EVB4'] = '0086'
-        self.OrbitInfo.BandsWavelength['EVB5'] = '0160'
-        self.OrbitInfo.BandsWavelength['EVB6'] = '0230'
-        self.OrbitInfo.BandsWavelength['EVB7'] = '0390'
-        self.OrbitInfo.BandsWavelength['EVB8'] = '0620'
-        self.OrbitInfo.BandsWavelength['EVB9'] = '0700'
-        self.OrbitInfo.BandsWavelength['EVB10'] = '0730'
-        self.OrbitInfo.BandsWavelength['EVB11'] = '0860'
-        self.OrbitInfo.BandsWavelength['EVB12'] = '0960'
-        self.OrbitInfo.BandsWavelength['EVB13'] = '1040'
-        self.OrbitInfo.BandsWavelength['EVB14'] = '1120'
-        self.OrbitInfo.BandsWavelength['EVB15'] = '1230'
-        self.OrbitInfo.BandsWavelength['EVB16'] = '1330'
 
-        self.OrbitInfo.BandsType['EVB1'] = 'REF'
-        self.OrbitInfo.BandsType['EVB2'] = 'REF'
-        self.OrbitInfo.BandsType['EVB3'] = 'REF'
-        self.OrbitInfo.BandsType['EVB4'] = 'REF'
-        self.OrbitInfo.BandsType['EVB5'] = 'REF'
-        self.OrbitInfo.BandsType['EVB6'] = 'REF'
-        self.OrbitInfo.BandsType['EVB7'] = 'EMIS'
-        self.OrbitInfo.BandsType['EVB8'] = 'EMIS'
-        self.OrbitInfo.BandsType['EVB9'] = 'EMIS'
-        self.OrbitInfo.BandsType['EVB10'] = 'EMIS'
-        self.OrbitInfo.BandsType['EVB11'] = 'EMIS'
-        self.OrbitInfo.BandsType['EVB12'] = 'EMIS'
-        self.OrbitInfo.BandsType['EVB13'] = 'EMIS'
-        self.OrbitInfo.BandsType['EVB14'] = 'EMIS'
-        self.OrbitInfo.BandsType['EVB15'] = 'EMIS'
-        self.OrbitInfo.BandsType['EVB16'] = 'EMIS'
+    def CreateBandsInfo2KM(self):
+
+        index  = 1
+        for wavelength in self.__waveLenthlist:
+            self.OrbitInfo.BandsWavelength['EVB'+str(index)] = wavelength
+            if int(wavelength)>230:
+                self.OrbitInfo.BandsType['EVB'+str(index)] = 'EMIS'
+            else:
+                self.OrbitInfo.BandsType['EVB'+str(index)] = 'REF'
+            index = index+1
 
 
     def GetLongitude(self):
@@ -114,56 +99,28 @@ class H8Dataprovider(DataProvider):
         if bandname!='':
 
             ret=self.GetDataSet(self.__DataFileHandle,'/', bandname)
+            # caltable = self.
 
         return ret
 
     def __GetOBSDatasetName2KM(self,band):
         bandname = ''
-        if band == 'EVB1':
-            bandname = 'NOMChannelVIS0046_2000'
-        elif band == 'EVB2':
-            bandname = 'NOMChannelVIS0051_2000'
-        elif band == 'EVB3':
-            bandname = 'NOMChannelVIS0064_2000'
-        elif band == 'EVB4':
-            bandname = 'NOMChannelVIS0086_2000'
-        elif band == 'EVB5':
-            bandname = 'NOMChannelVIS0160_2000'
-        elif band == 'EVB6':
-            bandname = 'NOMChannelVIS0230_2000'
-        elif band == 'EVB7':
-            bandname = 'NOMChannelIRX0390_2000'
-        elif band == 'EVB8':
-            bandname = 'NOMChannelIRX0620_2000'
-        elif band == 'EVB9':
-            bandname = 'NOMChannelIRX0700_2000'
-        elif band == 'EVB10':
-            bandname = 'NOMChannelIRX0730_2000'
-        elif band == 'EVB11':
-            bandname = 'NOMChannelIRX0860_2000'
-        elif band == 'EVB12':
-            bandname = 'NOMChannelIRX0960_2000'
-        elif band == 'EVB13':
-            bandname = 'NOMChannelIRX1040_2000'
-        elif band == 'EVB14':
-            bandname = 'NOMChannelIRX1120_2000'
-        elif band == 'EVB15':
-            bandname = 'NOMChannelIRX1230_2000'
-        elif band == 'EVB16':
-            bandname = 'NOMChannelIRX1330_2000'
+        waveLength = self.OrbitInfo.BandsWavelength[band]
+        if self.OrbitInfo.BandsType[band] == 'REF':
+            bandname = 'NOMChannelVIS'+waveLength+'_2000'
+        else:
+            bandname = 'NOMChannelIRX' + waveLength + '_2000'
 
         return  bandname
 
     def __GetOBSDatasetName4KM(self, band):
         bandname = ''
-        if band == 'EVB1':
-            bandname = 'NOMChannelVIS0064_4000'
-        elif band == 'EVB2':
-            bandname = 'NOMChannelVIS0086_4000'
-        elif band == 'EVB3':
-            bandname = 'NOMChannelVIS0160_4000'
-        elif band == 'EVB4':
-            bandname = 'NOMChannelVIS0230_4000'
+        waveLength = self.OrbitInfo.BandsWavelength[band]
+        if self.OrbitInfo.BandsType[band] == 'REF':
+            bandname = 'NOMChannelVIS'+waveLength+'_4000'
+        else:
+            bandname = 'NOMChannelIRX' + waveLength + '_4000'
+
 
         return bandname
 
