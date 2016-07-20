@@ -56,9 +56,9 @@ class H8Dataprovider(DataProvider):
             self.__waveLenthlist = ['0046', '0051', '0064', '0086', '0160', '0230', '0390', '0620', '0700', '0730',
                                     '0860','0960','1040', '1120', '1230', '1330']
         else:
-            self.__waveLenthlist = ['0046', '0051', '0064', '0086', '0160', '0230', '0390', '0620', '0700', '0730',
+            self.__waveLenthlist = ['0064', '0086', '0160', '0230', '0390', '0620', '0700', '0730',
                                     '0860', '0960', '1040', '1120', '1230', '1330']
-
+            self.__obsDataCount = 14
         self.__InitOrbitInfo()
 
 
@@ -88,13 +88,8 @@ class H8Dataprovider(DataProvider):
         return self.__dataRes
 
     def GetOBSData(self, band):
-        bandname = ''
 
-        if self.__dataRes == 2000:
-            bandname = self.__GetOBSDatasetName2KM(band)
-        else:
-            bandname = self.__GetOBSDatasetName4KM(band)
-
+        bandname = self.__GetOBSDatasetName(band,self.__dataRes)
         ret = None
         if bandname!='':
 
@@ -103,26 +98,15 @@ class H8Dataprovider(DataProvider):
 
         return ret
 
-    def __GetOBSDatasetName2KM(self,band):
+    def __GetOBSDatasetName(self, band,datares):
         bandname = ''
         waveLength = self.OrbitInfo.BandsWavelength[band]
         if self.OrbitInfo.BandsType[band] == 'REF':
-            bandname = 'NOMChannelVIS'+waveLength+'_2000'
+            bandname = 'NOMChannelVIS'+waveLength+'_'+str(datares)
         else:
-            bandname = 'NOMChannelIRX' + waveLength + '_2000'
+            bandname = 'NOMChannelIRX' + waveLength + '_'+str(datares)
 
         return  bandname
-
-    def __GetOBSDatasetName4KM(self, band):
-        bandname = ''
-        waveLength = self.OrbitInfo.BandsWavelength[band]
-        if self.OrbitInfo.BandsType[band] == 'REF':
-            bandname = 'NOMChannelVIS'+waveLength+'_4000'
-        else:
-            bandname = 'NOMChannelIRX' + waveLength + '_4000'
-
-
-        return bandname
 
     def GetOBSDataCount(self):
         return self.__obsDataCount
