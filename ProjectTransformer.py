@@ -31,3 +31,14 @@ class ProjTransformer(object):
 
         return Xdest,Ydest
 
+    def ProjUVToLatlon(self,U,V,srcProj):
+        lon = []
+        lat = []
+        dstProj = Proj(proj='latlong', datum='WGS84')
+
+        if lon.ndim == 1 :
+            lon,lat = self.ProjectTransform(U[:],V[:],srcProj,dstProj)
+        elif lon.ndim == 2:
+            lon, lat = self.ProjectTransform(U[:, :], V[:, :], srcProj, dstProj)
+
+        return lon*self.RAD2DEG,lat*self.RAD2DEG
