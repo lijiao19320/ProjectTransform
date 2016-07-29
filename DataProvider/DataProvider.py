@@ -51,9 +51,10 @@ class DataProvider(object):
     @abstractmethod
     def GetOBSDataCount(self):
         pass
-    # @abstractmethod
-    # def GetEmissData(self, band):
-    #     pass
+
+    @abstractmethod
+    def GetAuxiliaryData(self, band):
+        pass
 
     @abstractmethod
     def GetFile(self):

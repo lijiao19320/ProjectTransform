@@ -27,17 +27,17 @@ class H8Dataprovider(DataProvider):
 
     def __InitOrbitInfo(self):
         self.OrbitInfo.Sat = 'Himawari 8'
-        self.OrbitInfo.Sensor = 'H8'
+        self.OrbitInfo.Sensor = 'AHI'
         self.OrbitInfo.OrbitDirection= ''
 
         self.OrbitInfo.Width = self.__dataWidthAndHeight
         self.OrbitInfo.Height = self.__dataWidthAndHeight
 
-        solarzenith = self.GetSolarZenith()
-        if solarzenith[int(self.__dataWidthAndHeight/2),int(self.__dataWidthAndHeight/2)] <=85:
-            self.OrbitInfo.DNFlag = 'D'
-        else:
-            self.OrbitInfo.DNFlag = 'N'
+        # solarzenith = self.GetSolarZenith()
+        # if solarzenith[int(self.__dataWidthAndHeight/2),int(self.__dataWidthAndHeight/2)] <=85:
+        #     self.OrbitInfo.DNFlag = 'D'
+        # else:
+        #     self.OrbitInfo.DNFlag = 'N'
 
         self.OrbitInfo.Date=''
         self.OrbitInfo.Time=''
@@ -55,6 +55,11 @@ class H8Dataprovider(DataProvider):
             self.__obsDataCount = 16
             self.__waveLenthlist = ['0046', '0051', '0064', '0086', '0160', '0230', '0390', '0620', '0700', '0730',
                                     '0860','0960','1040', '1120', '1230', '1330']
+        elif '_0500M' in self.__fileName:
+            self.__dataRes = 500
+            self.__dataWidthAndHeight = 22000
+            self.__obsDataCount = 1
+            self.__waveLenthlist = ['0064']
         else:
             self.__waveLenthlist = ['0064', '0086', '0160', '0230', '0390', '0620', '0700', '0730',
                                     '0860', '0960', '1040', '1120', '1230', '1330']
