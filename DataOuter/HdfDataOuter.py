@@ -21,13 +21,13 @@ class HdfDataOuter(DataOuter):
         resolution = self.__dataProvider.GetResolution()
         para = self.getParameter()
 
-        providerID = self.__dataProvider.GetProviderID()
+        inputString = self.__dataProvider.GetInputString()
 
         # savePath,saveFile =  os.path.split(savefile)
         # saveFile = saveFile.upper()
         # saveFile=saveFile.replace('.HDF','_Proj.HDF')
-        if providerID!='NULL':
-            saveFile = para.OutputPath+providerID+'_Proj.HDF'
+        if inputString!='NULL':
+            saveFile = para.OutputPath+inputString+'_Proj.HDF'
         else:
             saveFile = para.OutputPath+'static.HDF'
 
@@ -69,7 +69,7 @@ class HdfDataOuter(DataOuter):
             data = (self.__dataProvider.GetOBSData(datasetname)).astype(N.int32)
         else:
             data = self.__dataProvider.GetAuxiliaryData(datasetname)
-            if data.dtype == N.float:
+            if (data.dtype == N.float)|(data.dtype == N.float32)|(data.dtype == N.float64):
                 data = data.astype(N.float32)
                 datatype = 1
             else:

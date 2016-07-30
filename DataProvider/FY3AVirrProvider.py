@@ -27,7 +27,7 @@ class FY3AVirrProvider(DataProvider):
         self.__filehandel = self.__HdfOperator.Open(file)
         self.__fileName = file
 
-    def GetProviderID(self):
+    def GetInputString(self):
         return  self.__fileName
 
 

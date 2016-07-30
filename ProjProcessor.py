@@ -65,6 +65,7 @@ class ProjProcessor(object):
     def CreateResultInfo(self):
         self.__projResult.ResultInfo={'Satellite Name':self.__dataProvider.OrbitInfo.Sat}
         self.__projResult.ResultInfo['Sensor Name']=self.__dataProvider.OrbitInfo.Sensor
+        self.__projResult.ResultInfo['ProjString'] = self.__ProjParam.GetParamID()
 
 
 

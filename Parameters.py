@@ -72,3 +72,6 @@ class ProjParameters(object):
 
     ProjectResolution = 0
 
+    def GetParamID(self):
+        return  self.DstProj.srs + '_'+str(self.ProjRange.MinLat) + '-' + str(self.ProjRange.MaxLat) + '-' + str(
+            self.ProjRange.MinLon) + '-' + str(self.ProjRange.MaxLon)

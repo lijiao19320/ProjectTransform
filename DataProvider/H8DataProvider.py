@@ -61,15 +61,13 @@ class H8Dataprovider(DataProvider):
     def SetLonLatFile(self,latfile,lonfile):
         # self.__latFileHandle = self.__HdfOperator.Open(latfile)
         # self.__lonFileHandle = self.__HdfOperator.Open(lonfile)
-        self.__HdfFileHandleList['Lat'] = self.__HdfOperator.Open(latfile)
-        self.__HdfFileHandleList['Lon'] = self.__HdfOperator.Open(lonfile)
+        self.__HdfFileHandleList['Latitude'] = self.__HdfOperator.Open(latfile)
+        self.__HdfFileHandleList['Longitude'] = self.__HdfOperator.Open(lonfile)
 
     def SetL1File(self, file):
 
         # self.__L1DataFileHandle = self.__HdfOperator.Open(file)
         self.__HdfFileHandleList['L1'] = self.__HdfOperator.Open(file)
-
-        self.CreateID(file)
 
         if '_2000M_' in file:
             self.__dataRes = 2000
@@ -88,7 +86,7 @@ class H8Dataprovider(DataProvider):
             self.__obsDataCount = 14
         self.__InitOrbitInfo()
 
-    def SetAuxiliaryDataFile(self,LNDfile,LMKfile,DEMfile,COASTfile,SATZENfile,SATAZIfile):
+    def SetAuxiliaryDataFile(self,LNDfile,LMKfile,DEMfile,COASTfile,SATZENfile,SATAZIfile,Lonfile,LatFile):
 
         if LNDfile!='NULL':
             self.__HdfFileHandleList['LandCover'] = self.__HdfOperator.Open(LNDfile)
@@ -108,12 +106,12 @@ class H8Dataprovider(DataProvider):
         if SATAZIfile!='NULL':
             self.__HdfFileHandleList['SensorAzimuth']= self.__HdfOperator.Open(SATAZIfile)
             self.__AuxiliaryDataNamesList['SensorAzimuth'] = 'SatAzimuth'
+        if Lonfile != 'NULL':
+            self.__AuxiliaryDataNamesList['Longitude'] = 'Lon'
+        if LatFile != 'NULL':
+            self.__AuxiliaryDataNamesList['Latitude'] = 'Lat'
 
         return
-
-    def CreateID(self,file):
-        path,filename =  os.path.split(file)
-        self.ID = filename.upper().replace('.HDF','')
 
 
     def CreateBandsInfo(self):
@@ -130,12 +128,12 @@ class H8Dataprovider(DataProvider):
 
     def GetLongitude(self):
 
-        return self.GetDataSet(self.__HdfFileHandleList['Lon'], '/', 'Lon')
+        return self.GetDataSet(self.__HdfFileHandleList['Longitude'], '/', 'Lon')
 
 
     def GetLatitude(self):
 
-        return self.GetDataSet(self.__HdfFileHandleList['Lat'], '/', 'Lat')
+        return self.GetDataSet(self.__HdfFileHandleList['Latitude'], '/', 'Lat')
 
 
     def GetResolution(self):
@@ -209,7 +207,10 @@ class H8Dataprovider(DataProvider):
     # def GetEmissData(self, band):
     #     return
 
-    def GetProviderID(self):
-        return  self.ID
+    def SetInputString(self,value):
+        self.InputString = value
+
+    def GetInputString(self):
+        return  self.InputString
 
 

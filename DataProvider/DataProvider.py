@@ -26,7 +26,7 @@ class DataProvider(object):
     startLine = -1
     endLine  = -1
     __parameter = None
-    ID = 'NULL'
+    InputString = 'NULL'
 
     @property
     def OrbitInfo(self):
@@ -62,7 +62,7 @@ class DataProvider(object):
         pass
 
     @abstractmethod
-    def GetProviderID(self):
+    def GetInputString(self):
         pass
 
     # @abstractmethod
