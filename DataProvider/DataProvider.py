@@ -26,6 +26,7 @@ class DataProvider(object):
     startLine = -1
     endLine  = -1
     __parameter = None
+    ID = 'NULL'
 
     @property
     def OrbitInfo(self):
@@ -53,32 +54,36 @@ class DataProvider(object):
         pass
 
     @abstractmethod
-    def GetAuxiliaryData(self, band):
+    def GetAuxiliaryData(self, dataName):
         pass
 
     @abstractmethod
-    def GetFile(self):
+    def GetAuxiliaryDataNamesList(self):
+        pass
+
+    @abstractmethod
+    def GetProviderID(self):
         pass
 
     # @abstractmethod
     # def SetParameter(self, papameter):
     #     pass
 
-    @abstractmethod
-    def GetSensorAzimuth(self):
-        pass
-
-    @abstractmethod
-    def GetSensorZenith(self):
-        pass
-
-    @abstractmethod
-    def GetSolarAzimuth(self):
-        pass
-
-    @abstractmethod
-    def GetSolarZenith(self):
-        pass
+    # @abstractmethod
+    # def GetSensorAzimuth(self):
+    #     pass
+    #
+    # @abstractmethod
+    # def GetSensorZenith(self):
+    #     pass
+    #
+    # @abstractmethod
+    # def GetSolarAzimuth(self):
+    #     pass
+    #
+    # @abstractmethod
+    # def GetSolarZenith(self):
+    #     pass
 
     def SetParameter(self, parameter):
         parameter.register(self)

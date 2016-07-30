@@ -1,5 +1,6 @@
 from DataProvider import *
 from HdfOperator import *
+import types
 import numpy as N
 from Parameters import *
 
@@ -7,18 +8,31 @@ from Parameters import *
 
 class H8Dataprovider(DataProvider):
     __HdfOperator = HdfOperator()
-    __latFileHandle = None
-    __lonFileHandle = None
-    __DataFileHandle = None
-    __fileName = None
+    # __latFileHandle = None
+    # __lonFileHandle = None
+    # __L1DataFileHandle = None
+    #
+    # __LNDFileHandle = None
+    # __LMKFileHandle = None
+    # __DEMFileHandle = None
+    # __COASTFileHandle = None
+    # __SATZENFileHandle = None
+    # __SATAZIFileHandle = None
+
+    __HdfFileHandleList = dict()
+
+    # __fileName = None
+
     __longitude = None
     __latitude = None
     __dataRes = 4000
     __dataWidthAndHeight= 2750
-    __obsDataCount = 4
+    __obsDataCount = 0
 
 
     __waveLenthlist = None
+
+    __AuxiliaryDataNamesList = dict()
 
     def __init__(self):
         super(H8Dataprovider,self).__init__()
@@ -44,18 +58,26 @@ class H8Dataprovider(DataProvider):
 
         self.CreateBandsInfo()
 
-    def SetFile(self,file):
-        self.__latFileHandle = self.__HdfOperator.Open(file[0])
-        self.__lonFileHandle = self.__HdfOperator.Open(file[1])
-        self.__DataFileHandle = self.__HdfOperator.Open(file[2])
-        self.__fileName = file[2]
-        if '_2000M_' in self.__fileName:
+    def SetLonLatFile(self,latfile,lonfile):
+        # self.__latFileHandle = self.__HdfOperator.Open(latfile)
+        # self.__lonFileHandle = self.__HdfOperator.Open(lonfile)
+        self.__HdfFileHandleList['Lat'] = self.__HdfOperator.Open(latfile)
+        self.__HdfFileHandleList['Lon'] = self.__HdfOperator.Open(lonfile)
+
+    def SetL1File(self, file):
+
+        # self.__L1DataFileHandle = self.__HdfOperator.Open(file)
+        self.__HdfFileHandleList['L1'] = self.__HdfOperator.Open(file)
+
+        self.CreateID(file)
+
+        if '_2000M_' in file:
             self.__dataRes = 2000
             self.__dataWidthAndHeight = 5500
             self.__obsDataCount = 16
             self.__waveLenthlist = ['0046', '0051', '0064', '0086', '0160', '0230', '0390', '0620', '0700', '0730',
                                     '0860','0960','1040', '1120', '1230', '1330']
-        elif '_0500M' in self.__fileName:
+        elif '_0500M' in file:
             self.__dataRes = 500
             self.__dataWidthAndHeight = 22000
             self.__obsDataCount = 1
@@ -65,6 +87,33 @@ class H8Dataprovider(DataProvider):
                                     '0860', '0960', '1040', '1120', '1230', '1330']
             self.__obsDataCount = 14
         self.__InitOrbitInfo()
+
+    def SetAuxiliaryDataFile(self,LNDfile,LMKfile,DEMfile,COASTfile,SATZENfile,SATAZIfile):
+
+        if LNDfile!='NULL':
+            self.__HdfFileHandleList['LandCover'] = self.__HdfOperator.Open(LNDfile)
+            self.__AuxiliaryDataNamesList['LandCover'] = 'LandCover'
+        if LMKfile!='NULL':
+            self.__HdfFileHandleList['LandSeaMask'] = self.__HdfOperator.Open(LMKfile)
+            self.__AuxiliaryDataNamesList['LandSeaMask'] = 'LandSeaMask'
+        if DEMfile!='NULL':
+            self.__HdfFileHandleList['DEM'] = self.__HdfOperator.Open(DEMfile)
+            self.__AuxiliaryDataNamesList['DEM'] = 'DEM'
+        if COASTfile!='NULL':
+            self.__HdfFileHandleList['SeaCoast']= self.__HdfOperator.Open(COASTfile)
+            self.__AuxiliaryDataNamesList['SeaCoast'] = 'SeaCoast'
+        if SATZENfile!='NULL':
+            self.__HdfFileHandleList['SensorZenith']= self.__HdfOperator.Open(SATZENfile)
+            self.__AuxiliaryDataNamesList['SensorZenith'] = 'SatZenith'
+        if SATAZIfile!='NULL':
+            self.__HdfFileHandleList['SensorAzimuth']= self.__HdfOperator.Open(SATAZIfile)
+            self.__AuxiliaryDataNamesList['SensorAzimuth'] = 'SatAzimuth'
+
+        return
+
+    def CreateID(self,file):
+        path,filename =  os.path.split(file)
+        self.ID = filename.upper().replace('.HDF','')
 
 
     def CreateBandsInfo(self):
@@ -81,12 +130,12 @@ class H8Dataprovider(DataProvider):
 
     def GetLongitude(self):
 
-        return self.GetDataSet(self.__lonFileHandle, '/', 'Lon')
+        return self.GetDataSet(self.__HdfFileHandleList['Lon'], '/', 'Lon')
 
 
     def GetLatitude(self):
 
-        return self.GetDataSet(self.__latFileHandle, '/', 'Lat')
+        return self.GetDataSet(self.__HdfFileHandleList['Lat'], '/', 'Lat')
 
 
     def GetResolution(self):
@@ -98,7 +147,7 @@ class H8Dataprovider(DataProvider):
         ret = None
         if bandname!='':
 
-            ret=self.GetDataSet(self.__DataFileHandle,'/', bandname)
+            ret=self.GetDataSet(self.__HdfFileHandleList['L1'], '/', bandname)
             # caltable = self.
 
         return ret
@@ -116,9 +165,9 @@ class H8Dataprovider(DataProvider):
     def GetOBSDataCount(self):
         return self.__obsDataCount
 
-    def GetSensorAzimuth(self):
-
-        return self.GetDataSet(self.__DataFileHandle,'/','NOMSatelliteAzimuth')
+    # def GetSensorAzimuth(self):
+    #
+    #     return self.GetDataSet(self.__DataFileHandle,'/','NOMSatelliteAzimuth')
 
 
     def GetDataSet(self,filehandle,group,ds):
@@ -133,19 +182,34 @@ class H8Dataprovider(DataProvider):
             ret = data[:,:]
         return ret
 
-    def GetSensorZenith(self):
-        return self.GetDataSet(self.__DataFileHandle,'/','NOMSatelliteZenith')
+    def GetAuxiliaryData(self,dataname):
 
-    def GetSolarAzimuth(self):
-        return self.GetDataSet(self.__DataFileHandle,'/','NOMSunAzimuth')
+        dsname = self.__AuxiliaryDataNamesList[dataname]
+        ret = None
+        if dsname =='':
+            return  ret
 
-    def GetSolarZenith(self):
-        return self.GetDataSet(self.__DataFileHandle,'/','NOMSunZenith')
+        ret=self.GetDataSet(self.__HdfFileHandleList[dataname], '/', dsname)
+
+        return ret
+
+
+    def GetAuxiliaryDataNamesList(self):
+        return self.__AuxiliaryDataNamesList
+    #
+    # def GetSensorZenith(self):
+    #     return self.GetDataSet(self.__DataFileHandle,'/','NOMSatelliteZenith')
+    #
+    # def GetSolarAzimuth(self):
+    #     return self.GetDataSet(self.__DataFileHandle,'/','NOMSunAzimuth')
+    #
+    # def GetSolarZenith(self):
+    #     return self.GetDataSet(self.__DataFileHandle,'/','NOMSunZenith')
 
     # def GetEmissData(self, band):
     #     return
 
-    def GetFile(self):
-        return  self.__fileName
+    def GetProviderID(self):
+        return  self.ID
 
 

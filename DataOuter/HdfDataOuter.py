@@ -21,17 +21,20 @@ class HdfDataOuter(DataOuter):
         resolution = self.__dataProvider.GetResolution()
         para = self.getParameter()
 
-        savefile = self.__dataProvider.GetFile()
+        providerID = self.__dataProvider.GetProviderID()
 
-        savePath,saveFile =  os.path.split(savefile)
-        saveFile = saveFile.upper()
-        saveFile=saveFile.replace('.HDF','_Proj.HDF')
+        # savePath,saveFile =  os.path.split(savefile)
+        # saveFile = saveFile.upper()
+        # saveFile=saveFile.replace('.HDF','_Proj.HDF')
+        if providerID!='NULL':
+            saveFile = para.OutputPath+providerID+'_Proj.HDF'
+        else:
+            saveFile = para.OutputPath+'static.HDF'
 
-        savefile = para.OutputPath+saveFile
-        if os.path.exists(savefile):
-            os.remove(savefile)
+        if os.path.exists(saveFile):
+            os.remove(saveFile)
 
-        fileHandle = self.__HdfOperator.Open(savefile)
+        fileHandle = self.__HdfOperator.Open(saveFile)
 
 
 
@@ -40,7 +43,9 @@ class HdfDataOuter(DataOuter):
             self.WriteDataset('EVB' + str(i), projResult, fileHandle, resolution)
             self.WriteDatasetAttribute(fileHandle,'EVB' + str(i))
 
-
+        AuxiliaryDataNamesList=dataProvider.GetAuxiliaryDataNamesList()
+        for auxName in AuxiliaryDataNamesList:
+            self.WriteDataset(auxName, projResult, fileHandle, resolution)
         # self.WriteData('SensorAzimuth', projResult, fileHandle, resolution)
 
         # self.__HdfOperator.Close(fileHandle)
@@ -62,19 +67,27 @@ class HdfDataOuter(DataOuter):
         datatype =0
         if 'EVB' in datasetname:
             data = (self.__dataProvider.GetOBSData(datasetname)).astype(N.int32)
+        else:
+            data = self.__dataProvider.GetAuxiliaryData(datasetname)
+            if data.dtype == N.float:
+                data = data.astype(N.float32)
+                datatype = 1
+            else:
+                data = data.astype(N.int32)
 
-        elif datasetname == 'SensorAzimuth':
-            data = (self.__dataProvider.GetSensorAzimuth()).astype(N.float32)
-            datatype=1
-        elif datasetname == 'SensorZenith':
-            data = (self.__dataProvider.GetSensorZenith()).astype(N.float32)
-            datatype=1
-        elif datasetname == 'SolarAzimuth':
-            data = (self.__dataProvider.GetSolarAzimuth()).astype(N.float32)
-            datatype=1
-        elif datasetname == 'SolarZenith':
-            data = (self.__dataProvider.GetSolarZenith()).astype(N.float32)
-            datatype=1
+
+        # elif datasetname == 'SensorAzimuth':
+        #     data = (self.__dataProvider.GetSensorAzimuth()).astype(N.float32)
+        #     datatype=1
+        # elif datasetname == 'SensorZenith':
+        #     data = (self.__dataProvider.GetSensorZenith()).astype(N.float32)
+        #     datatype=1
+        # elif datasetname == 'SolarAzimuth':
+        #     data = (self.__dataProvider.GetSolarAzimuth()).astype(N.float32)
+        #     datatype=1
+        # elif datasetname == 'SolarZenith':
+        #     data = (self.__dataProvider.GetSolarZenith()).astype(N.float32)
+        #     datatype=1
 
         # U = projResult.U
         # V = projResult.V
