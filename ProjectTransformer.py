@@ -16,10 +16,11 @@ class ProjTransformer(object):
            return  lon,lat
 
         if lon.ndim == 1 :
-            U,V = self.ProjectTransform(lon[:]*self.DEG2RAD,lat[:]*self.DEG2RAD,srcProj,dstproj)
+            # U,V = self.ProjectTransform(lon[:]*self.DEG2RAD,lat[:]*self.DEG2RAD,srcProj,dstproj)
+            U, V = dstproj(lon[:],lat[:])
         elif lon.ndim == 2:
-            U, V = self.ProjectTransform(lon[:, :] * self.DEG2RAD, lat[:, :]* self.DEG2RAD, srcProj, dstproj)
-
+            # U, V = self.ProjectTransform(lon[:, :] * self.DEG2RAD, lat[:, :]* self.DEG2RAD, srcProj, dstproj)
+            U, V = dstproj(lon[:,:] , lat[:,:] )
         return U,V
 
 
@@ -32,13 +33,20 @@ class ProjTransformer(object):
         return Xdest,Ydest
 
     def ProjUVToLatlon(self,U,V,srcProj):
-        lon = []
-        lat = []
+        lon = None
+        lat = None
         dstProj = Proj(proj='latlong', datum='WGS84')
+        if 'latlong' in srcProj.srs:
+            return U, V
 
-        if lon.ndim == 1 :
-            lon,lat = self.ProjectTransform(U[:],V[:],srcProj,dstProj)
-        elif lon.ndim == 2:
-            lon, lat = self.ProjectTransform(U[:, :], V[:, :], srcProj, dstProj)
+        if type(U) == N.ndarray:
+            if lon.ndim == 1 :
+                # lon,lat = self.ProjectTransform(U[:],V[:],srcProj,dstProj)
+                lon,lat = srcProj(U[:],V[:],inverse=True)
+            elif lon.ndim == 2:
+                # lon, lat = self.ProjectTransform(U[:, :], V[:, :], srcProj, dstProj)
+                lon, lat = srcProj(U[:,:], V[:,:], inverse=True)
+        else:
+            lon, lat = srcProj(U,V,inverse=True)
 
-        return lon*self.RAD2DEG,lat*self.RAD2DEG
+        return lon,lat

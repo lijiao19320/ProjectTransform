@@ -21,6 +21,11 @@ class ProjResult(object):
     __DataSearchTable = None
     __IslatlongProj = False
 
+    MaxU = None
+    MinU = None
+    MaxV = None
+    MinV = None
+
     # __latlonResRate = float(360)/float(40075.02*1000)
 
     __latlonResRate = float(0.01)/float(1000)
@@ -37,11 +42,18 @@ class ProjResult(object):
 
         RealU = U[maskU]
         RealV = V[maskV]
-        minU = N.min(RealU[:])
-        minV = N.min(RealV[:])
-        maxU = N.max(RealU[:])
-        maxV = N.max(RealV[:])
-        return minU, minV, maxU, maxV
+        self.MinU = N.min(RealU[:]).astype(N.float32)
+        self.MinV = N.min(RealV[:]).astype(N.float32)
+        self.MaxU = N.max(RealU[:]).astype(N.float32)
+        self.MaxV = N.max(RealV[:]).astype(N.float32)
+        return self.MinU, self.MinV, self.MaxU, self.MaxV
+
+    def CalCenterUV(self,U,V):
+        self.CalProjectMinMax(U,V)
+        centU = (self.MaxU-self.MinU)/2
+        centV = (self.MaxV-self.MinV)/2
+        return  centU,centV
+
 
     def CalProjectWidthAndHeight(self,minU,minV,maxU,maxV,resolution):
 
@@ -70,9 +82,10 @@ class ProjResult(object):
             res = self.__latlonResRate*resolution
 
         if self.NeedUpdate:
-            minU, minV, maxU, maxV=self.CalProjectMinMax(self.U[(self.LatLonRangeMask)], self.V[(self.LatLonRangeMask)])
-            self.__Height, self.__Width = self.CalProjectWidthAndHeight( minU, minV, maxU, maxV,res)
-            self.__tu, self.__tv = self.CalUVToIJ(res,self.U,self.V,minU,minV)
+            if self.MaxU == None:
+                self.CalProjectMinMax(self.U[(self.LatLonRangeMask)], self.V[(self.LatLonRangeMask)])
+            self.__Height, self.__Width = self.CalProjectWidthAndHeight( self.MinU, self.MinV, self.MaxU, self.MaxV,res)
+            self.__tu, self.__tv = self.CalUVToIJ(res,self.U,self.V,self.MinU,self.MinV)
             self.__DataSearchTable = SD.CreateOutputSearTable(int(self.__Width ), int(self.__Height), self.__tu[(self.LatLonRangeMask)], self.__tv[(self.LatLonRangeMask)])
             self.NeedUpdate = False
 
