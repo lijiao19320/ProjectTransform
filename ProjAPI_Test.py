@@ -2,7 +2,10 @@ from DataOuter.HdfDataOuter import *
 from DataProvider.H8DataProvider import *
 from DataProvider.FY3AVirrProvider import *
 from ProjProcessor import *
+from ParameterParser import *
 
+paramparser = ParameterParser()
+p = paramparser.parseXML()
 
 param = ProjParameters()
 # param.DstProj = Proj(proj='latlong',datum='WGS84',lon_0=145)

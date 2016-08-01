@@ -6,7 +6,7 @@ from ProjProcessor import *
 
 class ParameterParser(object):
     def parseXML(self):
-        tree = ET.parse('/home/lijiao/Documents/ArpNPPVirrs.xml')
+        tree = ET.parse('/mnt/hgfs/Vmware Linux/Data/ArpNPPVirrs.xml')
         root = tree.getroot()
 
         __minlat = 0
