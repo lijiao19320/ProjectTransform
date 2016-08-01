@@ -10,7 +10,7 @@ class ProjTransformer(object):
     def LatlonToProjUV (self, lon, lat, dstproj):
         U=[]
         V=[]
-        srcProj =Proj(proj='latlong',datum='WGS84')
+        # srcProj =Proj(proj='latlong',datum='WGS84')
 
         if 'latlong' in dstproj.srs:
            return  lon,lat
@@ -35,7 +35,7 @@ class ProjTransformer(object):
     def ProjUVToLatlon(self,U,V,srcProj):
         lon = None
         lat = None
-        dstProj = Proj(proj='latlong', datum='WGS84')
+        # dstProj = Proj(proj='latlong', datum='WGS84')
         if 'latlong' in srcProj.srs:
             return U, V
 

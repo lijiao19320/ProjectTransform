@@ -2,16 +2,19 @@ from DataOuter.HdfDataOuter import *
 from DataProvider.H8DataProvider import *
 from DataProvider.FY3AVirrProvider import *
 from ProjProcessor import *
-from ParameterParser import *
 
-parse = ParameterParser()
-param = parse.parseXML()
-#param = ProjParameters()
+
+param = ProjParameters()
 # param.DstProj = Proj(proj='latlong',datum='WGS84',lon_0=145)
-#param.DstProj = Proj(proj='merc',datum='WGS84',lon_0=145)
+param.DstProj = Proj(proj='merc',datum='WGS84',lon_0=145)
+
+# u,v = param.DstProj(100,40)
+# print u,v
+#
+# print param.DstProj(u,v,inverse=True)
 # param.ProjRange = ProjRange(0,60,70,140)
-#param.ProjRange = ProjRange(0,60,70,140)
-param.OutputPath = '/home/lijiao/Documents/output/'
+param.ProjRange = ProjRange(0,60,70,140)
+param.OutputPath = '/mnt/hgfs/Vmware Linux/Data/'
 
 # file = '/mnt/hgfs/Vmware Linux/Data/FY3A_VIRRX_GBAL_L1_20090427_0255_1000M_MS.HDF'
 provider = H8Dataprovider()
@@ -21,13 +24,13 @@ provider = H8Dataprovider()
 # file.append('/mnt/hgfs/Vmware Linux/Data/AHI8_OBI_4000M_NOM_20160414_0500.hdf')
 
 #2km
-L1file = '/home/lijiao/Documents/h8_data/AHI8_OBI_2000M_NOM_20160714_2000.hdf'
+L1file = '/mnt/hgfs/Vmware Linux/Data/AHI8_OBI_2000M_NOM_20160714_2000.hdf'
 path, filename = os.path.split(L1file)
 InputString = filename.upper().replace('.HDF', '')
 
 provider.SetL1File(L1file)
-provider.SetLonLatFile('/home/lijiao/Documents/h8_data/fygatNAV.Himawari08.xxxxxxx.000001(2000).hdf',
-                        '/home/lijiao/Documents/h8_data/fygatNAV.Himawari08.xxxxxxx.000002(2000).hdf')
+provider.SetLonLatFile('/mnt/hgfs/Vmware Linux/Data/fygatNAV.Himawari08.xxxxxxx.000001(2000).hdf',
+                        '/mnt/hgfs/Vmware Linux/Data/fygatNAV.Himawari08.xxxxxxx.000002(2000).hdf')
 provider.SetInputString(InputString)
 
 #500m

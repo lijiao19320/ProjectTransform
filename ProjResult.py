@@ -35,24 +35,26 @@ class ProjResult(object):
         if 'latlong' in dstProj.srs:
             self.__IslatlongProj = True
 
-    def CalProjectMinMax(self, U, V):
+    # def CalProjectMinMax(self, U, V):
+    #
+    #     maskU = (U < 999999999)
+    #     maskV = (V < 999999999)
+    #
+    #     RealU = U[maskU]
+    #     RealV = V[maskV]
+    #     self.MinU = N.min(RealU[:]).astype(N.float32)
+    #     self.MinV = N.min(RealV[:]).astype(N.float32)
+    #     self.MaxU = N.max(RealU[:]).astype(N.float32)
+    #     self.MaxV = N.max(RealV[:]).astype(N.float32)
+    #     return self.MinU, self.MinV, self.MaxU, self.MaxV
 
-        maskU = (U < 999999999)
-        maskV = (V < 999999999)
+    # def CalProjectMinMax(self,projRange):
 
-        RealU = U[maskU]
-        RealV = V[maskV]
-        self.MinU = N.min(RealU[:]).astype(N.float32)
-        self.MinV = N.min(RealV[:]).astype(N.float32)
-        self.MaxU = N.max(RealU[:]).astype(N.float32)
-        self.MaxV = N.max(RealV[:]).astype(N.float32)
-        return self.MinU, self.MinV, self.MaxU, self.MaxV
-
-    def CalCenterUV(self,U,V):
-        self.CalProjectMinMax(U,V)
-        centU = (self.MaxU-self.MinU)/2
-        centV = (self.MaxV-self.MinV)/2
-        return  centU,centV
+    # def CalCenterUV(self,U,V):
+    #     self.CalProjectMinMax(U,V)
+    #     centU = (self.MaxU-self.MinU)/2+self.MinU
+    #     centV = (self.MaxV-self.MinV)/2+self.MinV
+    #     return  centU,centV
 
 
     def CalProjectWidthAndHeight(self,minU,minV,maxU,maxV,resolution):
@@ -82,8 +84,8 @@ class ProjResult(object):
             res = self.__latlonResRate*resolution
 
         if self.NeedUpdate:
-            if self.MaxU == None:
-                self.CalProjectMinMax(self.U[(self.LatLonRangeMask)], self.V[(self.LatLonRangeMask)])
+            # if self.MaxU == None:
+            #     self.CalProjectMinMax(self.U[(self.LatLonRangeMask)], self.V[(self.LatLonRangeMask)])
             self.__Height, self.__Width = self.CalProjectWidthAndHeight( self.MinU, self.MinV, self.MaxU, self.MaxV,res)
             self.__tu, self.__tv = self.CalUVToIJ(res,self.U,self.V,self.MinU,self.MinV)
             self.__DataSearchTable = SD.CreateOutputSearTable(int(self.__Width ), int(self.__Height), self.__tu[(self.LatLonRangeMask)], self.__tv[(self.LatLonRangeMask)])
