@@ -5,8 +5,8 @@ from DataProvider.FY3AVirrProvider import *
 from ProjProcessor import *
 
 class ParameterParser(object):
-    def parseXML(self):
-        tree = ET.parse('/mnt/hgfs/Vmware Linux/Data/ArpNPPVirrs.xml')
+    def parseXML(self,xmlfile):
+        tree = ET.parse(xmlfile)
         root = tree.getroot()
 
         __minlat = 0

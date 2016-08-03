@@ -35,7 +35,7 @@ class ProjParameters(object):
         self.notify_observers()
 
 
-    __SrcProj = Proj(proj='longlat',ellps='WGS84')
+    __SrcProj = Proj(proj='latlong',ellps='WGS84')
     def setSrcProj(self,scrProj):
         self.__SrcProj = scrProj
 

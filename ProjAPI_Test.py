@@ -5,18 +5,13 @@ from ProjProcessor import *
 from ParameterParser import *
 
 paramparser = ParameterParser()
-p = paramparser.parseXML()
+param = paramparser.parseXML('/mnt/hgfs/Vmware Linux/Data/H8Proj.xml')
 
-param = ProjParameters()
+# param = ProjParameters()
 # param.DstProj = Proj(proj='latlong',datum='WGS84',lon_0=145)
-param.DstProj = Proj(proj='merc',datum='WGS84',lon_0=145)
+# param.DstProj = Proj(proj='merc',datum='WGS84',lon_0=145)
 
-# u,v = param.DstProj(100,40)
-# print u,v
-#
-# print param.DstProj(u,v,inverse=True)
 # param.ProjRange = ProjRange(0,60,70,140)
-param.ProjRange = ProjRange(0,60,70,140)
 param.OutputPath = '/mnt/hgfs/Vmware Linux/Data/'
 
 # file = '/mnt/hgfs/Vmware Linux/Data/FY3A_VIRRX_GBAL_L1_20090427_0255_1000M_MS.HDF'
