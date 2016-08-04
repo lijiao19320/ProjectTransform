@@ -95,8 +95,8 @@ class ProjProcessor(object):
         self.__projResult.ResultInfo={'SatelliteName':self.__dataProvider.OrbitInfo.Sat}
         self.__projResult.ResultInfo['SensorName']=self.__dataProvider.OrbitInfo.Sensor
         self.__projResult.ResultInfo['ProjString'] = self.__ProjParam.GetParamID()
-        self.__projResult.ResultInfo['UResolution'] = self.__dataProvider.GetResolution()
-        self.__projResult.ResultInfo['VResolution'] = self.__dataProvider.GetResolution()
+        self.__projResult.ResultInfo['UResolution'] = self.__ProjParam.ProjectResolution
+        self.__projResult.ResultInfo['VResolution'] = self.__ProjParam.ProjectResolution
 
         cornerU, cornerV=self.CalProjCorner()
         MinU, MinV, MaxU, MaxV = self.CalProjectMinMax(cornerU,cornerV)

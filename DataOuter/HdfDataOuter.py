@@ -18,8 +18,9 @@ class HdfDataOuter(DataOuter):
     def Save(self,projResult, dataProvider):
         self.__dataProvider = dataProvider
 
-        resolution = self.__dataProvider.GetResolution()
+
         para = self.getParameter()
+        resolution = self.para.ProjectResolution
 
         inputString = self.__dataProvider.GetInputString()
 
