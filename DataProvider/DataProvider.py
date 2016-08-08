@@ -26,7 +26,11 @@ class DataProvider(object):
     startLine = -1
     endLine  = -1
     __parameter = None
-    InputString = 'NULL'
+    __description = 'NULL'
+
+    @abstractmethod
+    def Dispose(self):
+        pass
 
     @property
     def OrbitInfo(self):
@@ -62,7 +66,7 @@ class DataProvider(object):
         pass
 
     @abstractmethod
-    def GetInputString(self):
+    def GetDataDescription(self):
         pass
 
     # @abstractmethod

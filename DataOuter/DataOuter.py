@@ -11,6 +11,10 @@ class DataOuter(object):
         return
 
     @abstractmethod
+    def Dispose(self):
+        pass
+
+    @abstractmethod
     def Save(self,projResult,dataProvider):
         pass
 

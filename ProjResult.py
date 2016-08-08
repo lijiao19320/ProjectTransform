@@ -35,6 +35,20 @@ class ProjResult(object):
         if 'latlong' in dstProj.srs:
             self.__IslatlongProj = True
 
+    def Dispose(self):
+       del self.U
+       del self.V
+
+       del self.ResultInfo
+
+       del self.LatLonRangeMask
+
+       del self.__tv
+       del self.__tu
+       del self.__DataSearchTable
+
+
+
     # def CalProjectMinMax(self, U, V):
     #
     #     maskU = (U < 999999999)
@@ -90,10 +104,10 @@ class ProjResult(object):
             self.__tu, self.__tv = self.CalUVToIJ(res,self.U,self.V,self.MinU,self.MinV)
             self.__DataSearchTable = SD.CreateOutputSearTable(int(self.__Width ), int(self.__Height), self.__tu[(self.LatLonRangeMask)], self.__tv[(self.LatLonRangeMask)])
             self.NeedUpdate = False
+        data = refdata[(self.LatLonRangeMask)]
+        saveData  = SD.CreateOutputData(int(self.__Width ), int(self.__Height),datatype,self.__DataSearchTable,data)
 
-        saveData  = SD.CreateOutputData(int(self.__Width ), int(self.__Height),datatype,self.__DataSearchTable,refdata[(self.LatLonRangeMask)])
-
-
+        del data
         return saveData
 
 

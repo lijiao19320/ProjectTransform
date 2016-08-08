@@ -25,12 +25,25 @@ class H8Dataprovider(DataProvider):
     __AuxiliaryDataNamesList = dict()
 
     def __init__(self):
-        print 'init dataprovider'
         super(H8Dataprovider,self).__init__()
         self.__AuxiliaryDataNamesList.clear()
         self.__HdfFileHandleList.clear()
 
         return
+
+    def Dispose(self):
+        self.__AuxiliaryDataNamesList.clear()
+        del self.__waveLenthlist
+
+        # del self.__AuxiliaryDataNamesList
+        for filehandle in self.__HdfFileHandleList:
+            self.__HdfFileHandleList[filehandle].close()
+
+        self.__HdfFileHandleList.clear()
+        self.__OrbitInfo = None
+        self.__parameter = None
+
+        super(H8Dataprovider, self).Dispose()
 
     def __InitOrbitInfo(self):
         self.OrbitInfo.Sat = 'Himawari 8'
@@ -82,6 +95,9 @@ class H8Dataprovider(DataProvider):
             self.__waveLenthlist = ['0064', '0086', '0160', '0230', '0390', '0620', '0700', '0730',
                                     '0860', '0960', '1040', '1120', '1230', '1330']
             self.__obsDataCount = 14
+
+        path, filename = os.path.split(file)
+        self.__description = filename.upper().replace('.HDF', '')
         self.__InitOrbitInfo()
 
     def SetAuxiliaryDataFile(self,LNDfile,LMKfile,DEMfile,COASTfile,SATZENfile,SATAZIfile,Lonfile,LatFile):
@@ -205,10 +221,12 @@ class H8Dataprovider(DataProvider):
     # def GetEmissData(self, band):
     #     return
 
-    def SetInputString(self,value):
-        self.InputString = value
+    # def SetDataDescription(self, value):
+    #     self.__description = value
 
-    def GetInputString(self):
-        return  self.InputString
+    def GetDataDescription(self):
+        if self.__description == 'NULL':
+            self.__description =self.__parameter.GetParamDescription()+'_'+str(self.__dataRes)
+        return  self.__description
 
 

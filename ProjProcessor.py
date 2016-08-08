@@ -4,6 +4,7 @@ from DataOuter.DataOuter import *
 from DataProvider.DataProvider import *
 from ProjectTransformer import *
 from ProjResult import *
+import gc
 
 class ProjProcessor(object):
 
@@ -31,6 +32,11 @@ class ProjProcessor(object):
         self.__ProjParam.data_changed()
         return
 
+    def Dispose(self):
+        self.__dataProvider.Dispose()
+        self.__dataOuter.Dispose()
+        self.__projResult.Dispose()
+        self.__ProjParam = None
 
     def OnParametersUpdate(self):
         self.__projResult.NeedUpdate = True
@@ -50,6 +56,10 @@ class ProjProcessor(object):
 
         proj = self.__ProjParam.DstProj
         U, V = self.__ProjTransformer.LatlonToProjUV(lon,lat,proj)
+
+        del lon
+        del lat
+        gc.collect()
 
         self.__projResult.U = U
         self.__projResult.V = V
@@ -94,7 +104,7 @@ class ProjProcessor(object):
     def CreateResultInfo(self):
         self.__projResult.ResultInfo={'SatelliteName':self.__dataProvider.OrbitInfo.Sat}
         self.__projResult.ResultInfo['SensorName']=self.__dataProvider.OrbitInfo.Sensor
-        self.__projResult.ResultInfo['ProjString'] = self.__ProjParam.GetParamID()
+        self.__projResult.ResultInfo['ProjString'] = self.__ProjParam.GetParamDescription()
         self.__projResult.ResultInfo['UResolution'] = self.__ProjParam.ProjectResolution
         self.__projResult.ResultInfo['VResolution'] = self.__ProjParam.ProjectResolution
 

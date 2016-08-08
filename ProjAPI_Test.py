@@ -23,13 +23,13 @@ provider = H8Dataprovider()
 
 #2km
 L1file = '/mnt/hgfs/Vmware Linux/Data/AHI8_OBI_2000M_NOM_20160714_2000.hdf'
-path, filename = os.path.split(L1file)
-InputString = filename.upper().replace('.HDF', '')
+# path, filename = os.path.split(L1file)
+# InputString = filename.upper().replace('.HDF', '')
 
 provider.SetL1File(L1file)
 provider.SetLonLatFile('/mnt/hgfs/Vmware Linux/Data/fygatNAV.Himawari08.xxxxxxx.000001(2000).hdf',
                         '/mnt/hgfs/Vmware Linux/Data/fygatNAV.Himawari08.xxxxxxx.000002(2000).hdf')
-provider.SetInputString(InputString)
+# provider.SetDataDescription(InputString)
 
 #500m
 # file = ['/mnt/hgfs/Vmware Linux/Data/AHI8_OBI_500M_NOM_LAT.hdf']
@@ -49,7 +49,7 @@ provider.SetInputString(InputString)
 #
 # provider.SetLonLatFile(Lonfile,Latfile)
 # provider.SetAuxiliaryDataFile(LNDfile,LMKfile,DEMfile,COASTfile,SATZENfile,SATAZIfile,Lonfile,Latfile)
-# provider.SetInputString(param.GetParamID())
+
 
 # print param.ProjRange
 # provider = FY3AVirrProvider()
@@ -66,4 +66,4 @@ processor = ProjProcessor(provider,dataouter,param)
 
 processor.PerformProj()
 
-
+processor.Dispose()
