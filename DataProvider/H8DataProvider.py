@@ -8,20 +8,10 @@ from Parameters import *
 
 class H8Dataprovider(DataProvider):
     __HdfOperator = HdfOperator()
-    # __latFileHandle = None
-    # __lonFileHandle = None
-    # __L1DataFileHandle = None
-    #
-    # __LNDFileHandle = None
-    # __LMKFileHandle = None
-    # __DEMFileHandle = None
-    # __COASTFileHandle = None
-    # __SATZENFileHandle = None
-    # __SATAZIFileHandle = None
+
 
     __HdfFileHandleList = dict()
 
-    # __fileName = None
 
     __longitude = None
     __latitude = None
@@ -35,7 +25,10 @@ class H8Dataprovider(DataProvider):
     __AuxiliaryDataNamesList = dict()
 
     def __init__(self):
+        print 'init dataprovider'
         super(H8Dataprovider,self).__init__()
+        self.__AuxiliaryDataNamesList.clear()
+        self.__HdfFileHandleList.clear()
 
         return
 
@@ -80,6 +73,11 @@ class H8Dataprovider(DataProvider):
             self.__dataWidthAndHeight = 22000
             self.__obsDataCount = 1
             self.__waveLenthlist = ['0064']
+        elif '_1000M' in file:
+            self.__dataRes = 1000
+            self.__dataWidthAndHeight = 11000
+            self.__obsDataCount = 4
+            self.__waveLenthlist = ['0046', '0051', '0064', '0086']
         else:
             self.__waveLenthlist = ['0064', '0086', '0160', '0230', '0390', '0620', '0700', '0730',
                                     '0860', '0960', '1040', '1120', '1230', '1330']

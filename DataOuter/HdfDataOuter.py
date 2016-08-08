@@ -20,7 +20,7 @@ class HdfDataOuter(DataOuter):
 
 
         para = self.getParameter()
-        resolution = self.para.ProjectResolution
+        resolution = para.ProjectResolution
 
         inputString = self.__dataProvider.GetInputString()
 
