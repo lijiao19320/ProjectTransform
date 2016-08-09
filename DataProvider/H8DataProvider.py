@@ -24,6 +24,8 @@ class H8Dataprovider(DataProvider):
 
     __AuxiliaryDataNamesList = dict()
 
+    __description = 'NULL'
+
     def __init__(self):
         super(H8Dataprovider,self).__init__()
         self.__AuxiliaryDataNamesList.clear()
@@ -33,15 +35,16 @@ class H8Dataprovider(DataProvider):
 
     def Dispose(self):
         self.__AuxiliaryDataNamesList.clear()
-        del self.__waveLenthlist
+        if self.__waveLenthlist is not None:
+            del self.__waveLenthlist
 
         # del self.__AuxiliaryDataNamesList
         for filehandle in self.__HdfFileHandleList:
             self.__HdfFileHandleList[filehandle].close()
 
         self.__HdfFileHandleList.clear()
-        self.__OrbitInfo = None
-        self.__parameter = None
+
+        self.__description = 'NULL'
 
         super(H8Dataprovider, self).Dispose()
 
@@ -226,7 +229,7 @@ class H8Dataprovider(DataProvider):
 
     def GetDataDescription(self):
         if self.__description == 'NULL':
-            self.__description =self.__parameter.GetParamDescription()+'_'+str(self.__dataRes)
+            self.__description = self.GetParameter().GetParamDescription()+'_'+str(self.GetParameter().ProjectResolution)
         return  self.__description
 
 

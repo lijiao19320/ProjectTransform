@@ -36,7 +36,9 @@ class ProjResult(object):
             self.__IslatlongProj = True
 
     def Dispose(self):
+
        del self.U
+
        del self.V
 
        del self.ResultInfo

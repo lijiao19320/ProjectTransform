@@ -77,13 +77,13 @@ class HdfDataOuter(DataOuter):
             else:
                 data = data.astype(N.int32)
 
-        if data != None:
+        if data is not None:
             savedata = projResult.CreateSaveData(data,resolution,datatype)
             self.__HdfOperator.WriteHdfDataset(fileHandle, '/', datasetname, savedata)
             del data
             del savedata
             gc.collect()
-            print 'Save '+datasetname
+            print 'Save '+ str(resolution)+'M'+datasetname
 
     def WriteDatasetAttribute(self,fileHandle,datasetname):
         if 'EVB' in datasetname:

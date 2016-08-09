@@ -26,11 +26,12 @@ class DataProvider(object):
     startLine = -1
     endLine  = -1
     __parameter = None
-    __description = 'NULL'
 
-    @abstractmethod
+
+
     def Dispose(self):
-        pass
+        self.__OrbitInfo = None
+        self.__parameter = None
 
     @property
     def OrbitInfo(self):
@@ -69,9 +70,7 @@ class DataProvider(object):
     def GetDataDescription(self):
         pass
 
-    # @abstractmethod
-    # def SetParameter(self, papameter):
-    #     pass
+
 
     # @abstractmethod
     # def GetSensorAzimuth(self):
@@ -94,6 +93,9 @@ class DataProvider(object):
         self.__parameter = parameter
 
         return
+
+    def GetParameter(self):
+        return  self.__parameter
 
     def OnParametersUpdate(self):
         lat = self.GetLatitude()
