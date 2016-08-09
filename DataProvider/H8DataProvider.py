@@ -49,8 +49,8 @@ class H8Dataprovider(DataProvider):
         super(H8Dataprovider, self).Dispose()
 
     def __InitOrbitInfo(self):
-        self.OrbitInfo.Sat = 'Himawari 8'
-        self.OrbitInfo.Sensor = 'AHI'
+        self.OrbitInfo.Sat = 'Himawari8'
+        self.OrbitInfo.Sensor = 'OBI'
         self.OrbitInfo.OrbitDirection= ''
 
         self.OrbitInfo.Width = self.__dataWidthAndHeight
@@ -66,6 +66,11 @@ class H8Dataprovider(DataProvider):
         self.OrbitInfo.Time=''
 
         self.CreateBandsInfo()
+
+    def GetData(self):
+        filehandle=self.__HdfFileHandleList['L1']
+
+        self.__HdfOperator.ReadHdfAttri(filehandle,'/',)
 
     def SetLonLatFile(self,latfile,lonfile):
         # self.__latFileHandle = self.__HdfOperator.Open(latfile)
@@ -101,6 +106,7 @@ class H8Dataprovider(DataProvider):
 
         path, filename = os.path.split(file)
         self.__description = filename.upper().replace('.HDF', '')
+        # self.__description=self.OrbitInfo.Sat+'_'+self.OrbitInfo.Sensor+
         self.__InitOrbitInfo()
 
     def SetAuxiliaryDataFile(self,LNDfile,LMKfile,DEMfile,COASTfile,SATZENfile,SATAZIfile,Lonfile,LatFile):

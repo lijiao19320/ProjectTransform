@@ -15,6 +15,11 @@ class HdfOperator(object):
         dataset = hdfgroup[datasetPath]
         return dataset
 
+    def ReadHdfAttri(self,fileHandle,groupPath,attrName):
+        hdfgroup = fileHandle[groupPath]
+        return hdfgroup.attrs[attrName]
+
+
     def WriteHdfDataset(self,fileHandle,groupPath,datasetName,dataset):
 
 
