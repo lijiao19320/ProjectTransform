@@ -30,7 +30,7 @@ class HdfDataOuter(DataOuter):
         # saveFile = saveFile.upper()
         # saveFile=saveFile.replace('.HDF','_Proj.HDF')
 
-        saveFile = para.OutputPath+dataDescription+'_Proj.HDF'
+        saveFile = para.OutputPath+dataDescription+'_'+para.ProjectTaskName+'.HDF'
 
 
         if os.path.exists(saveFile):

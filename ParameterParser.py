@@ -35,5 +35,5 @@ class ParameterParser(object):
         param = ProjParameters()
         param.ProjRange = ProjRange(int(self.__minlat),int(self. __maxlat), int(self.__minlon), int(self.__maxlon))
         param.DstProj = Proj(proj=self.__method, datum='WGS84', lon_0=int(self.__CentralLon))
-
+        param.ProjectTaskName = self.__TaskName
         return param

@@ -62,19 +62,37 @@ class H8Dataprovider(DataProvider):
         # else:
         #     self.OrbitInfo.DNFlag = 'N'
 
-        self.OrbitInfo.Date=''
-        self.OrbitInfo.Time=''
+        self.OrbitInfo.Date=self.GetDate()
+        self.OrbitInfo.Time=self.GetTime()
+
 
         self.CreateBandsInfo()
 
-    def GetData(self):
+    def GetDate(self):
         filehandle=self.__HdfFileHandleList['L1']
 
-        self.__HdfOperator.ReadHdfAttri(filehandle,'/',)
+        year = self.__HdfOperator.ReadHdfAttri(filehandle,'/','iStartYear')
+        month = self.__HdfOperator.ReadHdfAttri(filehandle,'/','iStartMonth')
+        day = self.__HdfOperator.ReadHdfAttri(filehandle,'/','iStartDay')
+        strmonth = '{:0>2}'.format(str(month[0]))
+        srtday = '{:0>2}'.format(str(day[0]))
+        stryear = '{:0>4}'.format(str(year[0]))
+        return stryear+strmonth+srtday
+
+    def GetTime(self):
+        filehandle=self.__HdfFileHandleList['L1']
+
+        hour = self.__HdfOperator.ReadHdfAttri(filehandle,'/','iStartHour')
+        minute = self.__HdfOperator.ReadHdfAttri(filehandle,'/','iStartMinute')
+
+        strhour= '{:0>2}'.format(str(hour[0]))
+        srtminute = '{:0>2}'.format(str(minute[0]))
+
+        return strhour+srtminute
 
     def SetLonLatFile(self,latfile,lonfile):
         # self.__latFileHandle = self.__HdfOperator.Open(latfile)
-        # self.__lonFileHandle = self.__HdfOperator.Open(lonfile)
+        # self.__lonFileHandle = self.__HdfOperator.Open(lonfile)l
         self.__HdfFileHandleList['Latitude'] = self.__HdfOperator.Open(latfile)
         self.__HdfFileHandleList['Longitude'] = self.__HdfOperator.Open(lonfile)
 
@@ -104,10 +122,11 @@ class H8Dataprovider(DataProvider):
                                     '0860', '0960', '1040', '1120', '1230', '1330']
             self.__obsDataCount = 14
 
-        path, filename = os.path.split(file)
-        self.__description = filename.upper().replace('.HDF', '')
-        # self.__description=self.OrbitInfo.Sat+'_'+self.OrbitInfo.Sensor+
+        # path, filename = os.path.split(file)
+        # self.__description = filename.upper().replace('.HDF', '')
         self.__InitOrbitInfo()
+        self.__description=self.OrbitInfo.Sat+'_'+self.OrbitInfo.Sensor+'_'+self.OrbitInfo.Date+'_'+self.OrbitInfo.Time
+
 
     def SetAuxiliaryDataFile(self,LNDfile,LMKfile,DEMfile,COASTfile,SATZENfile,SATAZIfile,Lonfile,LatFile):
 
