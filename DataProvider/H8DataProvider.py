@@ -20,7 +20,7 @@ class H8Dataprovider(DataProvider):
     __obsDataCount = 0
 
 
-    __waveLenthlist = None
+    __BandWaveLenthList = None
 
     __AuxiliaryDataNamesList = dict()
 
@@ -35,8 +35,8 @@ class H8Dataprovider(DataProvider):
 
     def Dispose(self):
         self.__AuxiliaryDataNamesList.clear()
-        if self.__waveLenthlist is not None:
-            del self.__waveLenthlist
+        if self.__BandWaveLenthList is not None:
+            del self.__BandWaveLenthList
 
         # del self.__AuxiliaryDataNamesList
         for filehandle in self.__HdfFileHandleList:
@@ -66,7 +66,7 @@ class H8Dataprovider(DataProvider):
         self.OrbitInfo.Time=self.GetTime()
 
 
-        self.CreateBandsInfo()
+
 
     def GetDate(self):
         filehandle=self.__HdfFileHandleList['L1']
@@ -90,6 +90,15 @@ class H8Dataprovider(DataProvider):
 
         return strhour+srtminute
 
+    def OnParametersUpdate(self):
+        super(H8Dataprovider, self).OnParametersUpdate()
+
+        self.__BandWaveLenthList = self.GetParameter().BandWaveLengthList
+
+        self.__obsDataCount =len(self.__BandWaveLenthList)
+        self.CreateBandsInfo()
+        return
+
     def SetLonLatFile(self,latfile,lonfile):
         # self.__latFileHandle = self.__HdfOperator.Open(latfile)
         # self.__lonFileHandle = self.__HdfOperator.Open(lonfile)l
@@ -104,23 +113,23 @@ class H8Dataprovider(DataProvider):
         if '_2000M_' in file:
             self.__dataRes = 2000
             self.__dataWidthAndHeight = 5500
-            self.__obsDataCount = 16
-            self.__waveLenthlist = ['0046', '0051', '0064', '0086', '0160', '0230', '0390', '0620', '0700', '0730',
-                                    '0860','0960','1040', '1120', '1230', '1330']
+            # self.__obsDataCount = 16
+            # self.__BandWaveLenthList = ['0046', '0051', '0064', '0086', '0160', '0230', '0390', '0620', '0700', '0730',
+            #                         '0860','0960','1040', '1120', '1230', '1330']
         elif '_0500M' in file:
             self.__dataRes = 500
             self.__dataWidthAndHeight = 22000
-            self.__obsDataCount = 1
-            self.__waveLenthlist = ['0064']
+            # self.__obsDataCount = 1
+            # self.__BandWaveLenthList = ['0064']
         elif '_1000M' in file:
             self.__dataRes = 1000
             self.__dataWidthAndHeight = 11000
-            self.__obsDataCount = 4
-            self.__waveLenthlist = ['0046', '0051', '0064', '0086']
-        else:
-            self.__waveLenthlist = ['0064', '0086', '0160', '0230', '0390', '0620', '0700', '0730',
-                                    '0860', '0960', '1040', '1120', '1230', '1330']
-            self.__obsDataCount = 14
+            # self.__obsDataCount = 4
+            # self.__BandWaveLenthList = ['0046', '0051', '0064', '0086']
+        # else:
+        #     self.__BandWaveLenthList = ['0064', '0086', '0160', '0230', '0390', '0620', '0700', '0730',
+        #                             '0860', '0960', '1040', '1120', '1230', '1330']
+        #     self.__obsDataCount = 14
 
         # path, filename = os.path.split(file)
         # self.__description = filename.upper().replace('.HDF', '')
@@ -159,7 +168,7 @@ class H8Dataprovider(DataProvider):
     def CreateBandsInfo(self):
 
         index  = 1
-        for wavelength in self.__waveLenthlist:
+        for wavelength in self.__BandWaveLenthList:
             self.OrbitInfo.BandsWavelength['EVB'+str(index)] = wavelength
             if int(wavelength)>230:
                 self.OrbitInfo.BandsType['EVB'+str(index)] = 'EMIS'

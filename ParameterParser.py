@@ -18,7 +18,7 @@ class ParameterParser(object):
         __method = None
         __format = None
         __TaskName = None
-
+        bandWaveLenth = ''
         for ProjInfor in root.iter('ProjInfor'):
             self.__format = ProjInfor.find('ProjFormat').text
             self.__TaskName = ProjInfor.find('ProjTaskName').text
@@ -32,8 +32,17 @@ class ParameterParser(object):
             self.__maxlat = projrange.find('MaxLat').text
             self.__minlat = projrange.find('MinLat').text
 
+        for BandsToProj in root.iter('BandsToProj'):
+            bandWaveLenth = BandsToProj.find('BandWaveLength').text
+            # self.__minlon = BandsToProj.find('MinLon').text
+            # self.__maxlat = BandsToProj.find('MaxLat').text
+            # self.__minlat = BandsToProj.find('MinLat').text
+
+
         param = ProjParameters()
         param.ProjRange = ProjRange(int(self.__minlat),int(self. __maxlat), int(self.__minlon), int(self.__maxlon))
         param.DstProj = Proj(proj=self.__method, datum='WGS84', lon_0=int(self.__CentralLon))
         param.ProjectTaskName = self.__TaskName
+        param.BandWaveLengthList = bandWaveLenth.split(',')
+        param.ProjectResolution = int(self.__resolution)
         return param

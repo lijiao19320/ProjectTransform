@@ -1,6 +1,7 @@
 import h5py
 import os
 import os.path
+import numpy as N
 
 class HdfOperator(object):
 
@@ -10,9 +11,11 @@ class HdfOperator(object):
         return h5py.File(filePath, 'a')
 
     def ReadHdfDataset(self,fileHandle,groupPath,datasetPath):
-
-        hdfgroup = fileHandle[groupPath]
-        dataset = hdfgroup[datasetPath]
+        dataset = N.zeros((1,1,1))
+        if groupPath in fileHandle.keys():
+            hdfgroup = fileHandle[groupPath]
+            if datasetPath in hdfgroup.keys():
+                dataset = hdfgroup[datasetPath]
         return dataset
 
     def ReadHdfAttri(self,fileHandle,groupPath,attrName):
