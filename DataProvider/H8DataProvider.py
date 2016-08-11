@@ -15,8 +15,8 @@ class H8Dataprovider(DataProvider):
 
     __longitude = None
     __latitude = None
-    __dataRes = 4000
-    __dataWidthAndHeight= 2750
+    __dataRes = 0
+    __dataWidthAndHeight= 0
     __obsDataCount = 0
 
 
@@ -30,13 +30,15 @@ class H8Dataprovider(DataProvider):
         super(H8Dataprovider,self).__init__()
         self.__AuxiliaryDataNamesList.clear()
         self.__HdfFileHandleList.clear()
-
+        self.__obsDataCount = 0
+        self.__description = 'NULL'
         return
 
     def Dispose(self):
         self.__AuxiliaryDataNamesList.clear()
         if self.__BandWaveLenthList is not None:
             del self.__BandWaveLenthList
+            self.__BandWaveLenthList=None
 
         # del self.__AuxiliaryDataNamesList
         for filehandle in self.__HdfFileHandleList:
@@ -45,7 +47,7 @@ class H8Dataprovider(DataProvider):
         self.__HdfFileHandleList.clear()
 
         self.__description = 'NULL'
-
+        self.__obsDataCount = 0
         super(H8Dataprovider, self).Dispose()
 
     def __InitOrbitInfo(self):
@@ -97,6 +99,7 @@ class H8Dataprovider(DataProvider):
 
         self.__obsDataCount =len(self.__BandWaveLenthList)
         self.CreateBandsInfo()
+
         return
 
     def SetLonLatFile(self,latfile,lonfile):

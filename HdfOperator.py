@@ -12,7 +12,7 @@ class HdfOperator(object):
 
     def ReadHdfDataset(self,fileHandle,groupPath,datasetPath):
         dataset = N.zeros((1,1,1))
-        if groupPath in fileHandle.keys():
+        if (groupPath in fileHandle.keys()) or groupPath == '/':
             hdfgroup = fileHandle[groupPath]
             if datasetPath in hdfgroup.keys():
                 dataset = hdfgroup[datasetPath]

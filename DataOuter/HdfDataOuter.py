@@ -40,10 +40,11 @@ class HdfDataOuter(DataOuter):
 
 
 
-        Evbcnt = dataProvider.GetOBSDataCount()+1
-        for i in xrange(1,Evbcnt):
-            self.WriteDataset('EVB' + str(i), projResult, fileHandle, resolution)
-            self.WriteDatasetAttribute(fileHandle,'EVB' + str(i))
+        Evbcnt = dataProvider.GetOBSDataCount()
+        if para.IsAuxiliaryFileMode == False:
+            for i in xrange(1,Evbcnt+1):
+                self.WriteDataset('EVB' + str(i), projResult, fileHandle, resolution)
+                self.WriteDatasetAttribute(fileHandle,'EVB' + str(i))
 
         AuxiliaryDataNamesList=dataProvider.GetAuxiliaryDataNamesList()
         for auxName in AuxiliaryDataNamesList:

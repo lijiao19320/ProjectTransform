@@ -85,6 +85,7 @@ def ProcessAuxProj(resolution):
     auxparam = paramparser.parseXML(sys.argv[2])
     auxparam.OutputPath = '/FY4COMM/FY4A/L2/AGRIX/PRJ/'
     auxparam.ProjectResolution = resolution
+    auxparam.IsAuxiliaryFileMode = True
     ProcessProj(auxparam, resolution, True)
 
 if __name__ == '__main__':
@@ -104,7 +105,7 @@ if __name__ == '__main__':
     # p2 = multiprocessing.Process(target = ProcessProj, args = (param,500,False,))
     # p2.start()
     ProcessProj(param, int(sys.argv[3]),False)
-    auxfile = param.OutputPath + param.GetParamDescription() + '_'+sys.argv[3]+'_Proj.HDF'
+    auxfile = param.OutputPath + param.GetParamDescription() + '_'+sys.argv[3]+'_'+param.ProjectTaskName+'.HDF'
     if os.path.exists(auxfile) == False:
         ProcessAuxProj(int(sys.argv[3]))
 

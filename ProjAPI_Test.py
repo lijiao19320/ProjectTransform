@@ -84,6 +84,7 @@ def ProcessAuxProj(resolution):
     paramparser = ParameterParser()
     auxparam = paramparser.parseXML('/mnt/hgfs/Vmware Linux/Data/' + sys.argv[2])
     auxparam.OutputPath = '/mnt/hgfs/Vmware Linux/Data/'
+    auxparam.IsAuxiliaryFileMode = True
     auxparam.ProjectResolution = resolution
     ProcessProj(auxparam, resolution, True)
 
@@ -95,7 +96,7 @@ if __name__ == '__main__':
     paramparser = ParameterParser()
     param = paramparser.parseXML('/mnt/hgfs/Vmware Linux/Data/'+sys.argv[2])
     param.OutputPath = '/mnt/hgfs/Vmware Linux/Data/'
-    auxfile = param.OutputPath+param.GetParamDescription()+'_2000_Proj.HDF'
+    auxfile = param.OutputPath+param.GetParamDescription()+'_'+sys.argv[3]+'_'+param.ProjectTaskName+'.HDF'
     ProcessProj(param, int(sys.argv[3]),False)
 
     if os.path.exists(auxfile) == False:
