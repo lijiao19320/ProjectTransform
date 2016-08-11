@@ -117,6 +117,10 @@ class ProjProcessor(object):
         self.__projResult.MaxV = MaxV
         self.__projResult.MinV = MinV
         self.__projResult.MinU = MinU
+        self.__projResult.ResultInfo['MinLon'] = self.__ProjParam.ProjRange.MinLon
+        self.__projResult.ResultInfo['MaxLon'] = self.__ProjParam.ProjRange.MaxLon
+        self.__projResult.ResultInfo['MinLat'] = self.__ProjParam.ProjRange.MinLat
+        self.__projResult.ResultInfo['MaxLat'] = self.__ProjParam.ProjRange.MaxLat
         self.__projResult.ResultInfo['CenterLatitude'] = centlat
         self.__projResult.ResultInfo['CenterLongitude'] = centlon
 

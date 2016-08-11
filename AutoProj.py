@@ -94,23 +94,23 @@ if __name__ == '__main__':
     param.OutputPath = '/FY4COMM/FY4A/L2/AGRIX/PRJ/'
 
     # ProcessProj(param, 2000,False)
-
-    p1 = multiprocessing.Process(target = ProcessProj, args = (param,2000,False,))
-    p1.start()
-
-    p2 = multiprocessing.Process(target = ProcessProj, args = (param,1000,False,))
-    p2.start()
-
-    p2 = multiprocessing.Process(target = ProcessProj, args = (param,500,False,))
-    p2.start()
-
-    auxfile = param.OutputPath + param.GetParamDescription() + '_2000_Proj.HDF'
+    #
+    # p1 = multiprocessing.Process(target = ProcessProj, args = (param,2000,False,))
+    # p1.start()
+    #
+    # p2 = multiprocessing.Process(target = ProcessProj, args = (param,1000,False,))
+    # p2.start()
+    #
+    # p2 = multiprocessing.Process(target = ProcessProj, args = (param,500,False,))
+    # p2.start()
+    ProcessProj(param, int(sys.argv[3]),False)
+    auxfile = param.OutputPath + param.GetParamDescription() + '_'+sys.argv[3]+'_Proj.HDF'
     if os.path.exists(auxfile) == False:
-        ProcessAuxProj(2000)
+        ProcessAuxProj(int(sys.argv[3]))
 
-    auxfile = param.OutputPath + param.GetParamDescription() + '_1000_Proj.HDF'
-    if os.path.exists(auxfile) == False:
-        ProcessAuxProj(1000)
+    # auxfile = param.OutputPath + param.GetParamDescription() + '_1000_Proj.HDF'
+    # if os.path.exists(auxfile) == False:
+    #     ProcessAuxProj(1000)
 
     # auxfile = param.OutputPath + param.GetParamDescription() + '_500_Proj.HDF'
     # if os.path.exists(auxfile) == False:
