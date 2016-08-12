@@ -185,6 +185,102 @@ static PyObject* CreateOutputData(PyObject* self, PyObject* args)
         return NULL;
 }
 
+/*  wrapped H8Calibration function */
+static PyObject* CreateH8CalibrationData(PyObject* self, PyObject* args)
+{
+
+//    printf("beging create savedata  ");
+    int width;
+    int height;
+    int datatype;
+    PyArrayObject *in_array_SearchTable;
+
+    PyArrayObject *in_array_refdata;
+
+
+    /*  parse single numpy array argument */
+    if (!PyArg_ParseTuple(args, "iiiO!O!",&width,&height, &datatype,&PyArray_Type, &in_array_SearchTable,
+     &PyArray_Type, &in_array_refdata))
+        return NULL;
+
+      PyArrayIterObject *Tabel_iter = (PyArrayIterObject *)PyArray_IterNew((PyObject*)in_array_SearchTable);
+
+      PyArrayIterObject *ref_iter = (PyArrayIterObject *)PyArray_IterNew((PyObject*)in_array_refdata);
+
+
+    npy_intp dims[2] = {height,width};
+
+    PyObject *savedata ;
+
+    savedata= PyArray_SimpleNew(2, dims, NPY_INT32);
+
+    PyArrayIterObject *save_iter;
+    save_iter = (PyArrayIterObject *)PyArray_IterNew(savedata);
+
+    int count = height*width;
+
+    int i =0;
+
+    for( i =0 ;i < count;i++)
+     {
+
+        {
+
+            int * refdataptr = (int *)ref_iter->dataptr;
+
+            PyArray_ITER_GOTO1D(Tabel_iter,*refdataptr);
+            int factor = 1000;
+
+            if (datatype == 1)
+            {
+                factor = 100;
+            }
+             int * savedataptr = (int *)save_iter->dataptr;
+             float * tableValue = (float *)Tabel_iter->dataptr;
+//                int * refdataptr = ((float *)Tabel_iter->dataptr) ;
+             float calValue =(*tableValue);
+             if(calValue<65534)
+                calValue*=factor;
+
+
+             *(savedataptr) = (int)calValue;
+//            else
+//            {
+//                float * savedataptr = (float *)save_iter->dataptr;
+//                float * refdataptr = (float *)ref_iter->dataptr;
+//                *(savedataptr) = *(refdataptr);
+//            }
+
+//            printf("%i\n" , calValue);
+            PyArray_ITER_NEXT(ref_iter);
+            PyArray_ITER_NEXT(save_iter);
+
+
+        }
+     }
+
+    /*  clean up and return the result */
+//    Py_DECREF(in_array_SearchTable);
+//    Py_DECREF(in_array_refdata);
+    Py_DECREF(Tabel_iter);
+    Py_DECREF(ref_iter);
+    Py_DECREF(save_iter);
+
+    Py_INCREF(savedata);
+
+
+//    return Py_BuildValue("O", savedata);
+    return savedata;
+    /*  in case bad things happen */
+    fail:
+        Py_XDECREF(Tabel_iter);
+        Py_XDECREF(ref_iter);
+        Py_XDECREF(save_iter);
+
+        Py_XDECREF(savedata);
+        printf("AH~~~~~~~~~~~~Bad things happen!");
+        return NULL;
+}
 
 /*  define functions in module */
 static PyMethodDef OutputDataMethods[] =
@@ -192,6 +288,8 @@ static PyMethodDef OutputDataMethods[] =
      {"CreateOutputSearTable", CreateOutputSearTable, METH_VARARGS,
          ""},
      {"CreateOutputData", CreateOutputData, METH_VARARGS,
+         ""},
+     {"CreateH8CalibrationData", CreateH8CalibrationData, METH_VARARGS,
          ""},
      {NULL, NULL, 0, NULL}
 };

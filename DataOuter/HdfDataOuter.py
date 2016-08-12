@@ -80,7 +80,10 @@ class HdfDataOuter(DataOuter):
 
         if data is not None:
             savedata = projResult.CreateSaveData(data,resolution,datatype)
-            self.__HdfOperator.WriteHdfDataset(fileHandle, '/', datasetname, savedata)
+            if 'EVB' in datasetname:
+                self.__HdfOperator.WriteHdfDataset(fileHandle, '/', datasetname, savedata.astype(N.uint16))
+            else:
+                self.__HdfOperator.WriteHdfDataset(fileHandle, '/', datasetname, savedata)
             del data
             del savedata
             gc.collect()
@@ -93,6 +96,8 @@ class HdfDataOuter(DataOuter):
             bandstype = orbitInfo.BandsType[datasetname]
             if bandstype == 'REF':
                 self.__HdfOperator.WriteHdfDatasetAttribute(fileHandle, '/', datasetname, 'slope',0.001)
+            else:
+                elf.__HdfOperator.WriteHdfDatasetAttribute(fileHandle, '/', datasetname, 'slope', 0.01)
         return
 
 

@@ -3,7 +3,7 @@ from HdfOperator import *
 import types
 import numpy as N
 from Parameters import *
-
+import ProjOutputData_module as SD
 
 
 class H8Dataprovider(DataProvider):
@@ -196,12 +196,19 @@ class H8Dataprovider(DataProvider):
     def GetOBSData(self, band):
 
         bandname = self.__GetOBSDatasetName(band,self.__dataRes)
+        caltableName = 'CAL'+self.OrbitInfo.BandsWavelength[band]
         ret = None
         if bandname!='':
 
-            ret=self.GetDataSet(self.__HdfFileHandleList['L1'], '/', bandname)
-            # caltable = self.
-
+            data=self.GetDataSet(self.__HdfFileHandleList['L1'], '/', bandname)[:,:].astype(N.int32)
+            # caltable = self.GetDataSet(self.__HdfFileHandleList['L1'], '/', caltableName)
+            caltable = self.__HdfOperator.ReadHdfDataset(self.__HdfFileHandleList['L1'], '/', caltableName)[:].astype(N.float32)
+            height = data.shape[0]
+            width = data.shape[1]
+            bantype = 1
+            if self.OrbitInfo.BandsType[band] == 'REF':
+                bantype = 0
+            ret=SD.CreateH8CalibrationData(int(width ), int(height),bantype,caltable,data)
         return ret
 
     def __GetOBSDatasetName(self, band,datares):
