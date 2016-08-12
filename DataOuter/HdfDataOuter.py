@@ -97,7 +97,7 @@ class HdfDataOuter(DataOuter):
             if bandstype == 'REF':
                 self.__HdfOperator.WriteHdfDatasetAttribute(fileHandle, '/', datasetname, 'slope',0.001)
             else:
-                elf.__HdfOperator.WriteHdfDatasetAttribute(fileHandle, '/', datasetname, 'slope', 0.01)
+                self.__HdfOperator.WriteHdfDatasetAttribute(fileHandle, '/', datasetname, 'slope', 0.01)
         return
 
 
