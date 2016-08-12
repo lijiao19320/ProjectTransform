@@ -7,7 +7,7 @@ from ParameterParser import *
 import multiprocessing
 
 
-
+L1FilePath = ''
 
 def ProviderFactory(isCreateAuxfile,resolution):
     provider = None
@@ -49,17 +49,17 @@ def CreateStdProjProvider(resolution):
 
     Latfile = '/FY4COMM/FY4A/COM/fygatNAV.Himawari08.xxxxxxx.000001(2000).hdf'
     Lonfile = '/FY4COMM/FY4A/COM/fygatNAV.Himawari08.xxxxxxx.000002(2000).hdf'
-    L1file = '/FY4COMM/FY4A/L1/AHI8_OBI_2000M_NOM_' + sys.argv[1] + '.hdf'
+    L1file = L1FilePath+'AHI8_OBI_2000M_NOM_' + sys.argv[1] + '.hdf'
 
     if resolution == 1000:
         Latfile = '/FY4COMM/FY4A/COM/AHI8_OBI_1000M_NOM_LAT.hdf'
         Lonfile = '/FY4COMM/FY4A/COM/AHI8_OBI_1000M_NOM_LON.hdf'
-        L1file = '/FY4COMM/FY4A/L1/AHI8_OBI_1000M_NOM_' + sys.argv[1] + '.hdf'
+        L1file = L1FilePath+'AHI8_OBI_1000M_NOM_' + sys.argv[1] + '.hdf'
 
     elif resolution == 500:
         Latfile = '/FY4COMM/FY4A/COM/AHI8_OBI_500M_NOM_LAT.HDF'
         Lonfile = '/FY4COMM/FY4A/COM/AHI8_OBI_500M_NOM_LON.HDF'
-        L1file = '/FY4COMM/FY4A/L1/AHI8_OBI_0500M_NOM_' + sys.argv[1] + '.hdf'
+        L1file = L1FilePath+'AHI8_OBI_0500M_NOM_' + sys.argv[1] + '.hdf'
 
 
     provider.SetLonLatFile(Latfile,
@@ -104,6 +104,7 @@ if __name__ == '__main__':
     #
     # p2 = multiprocessing.Process(target = ProcessProj, args = (param,500,False,))
     # p2.start()
+    L1FilePath = sys.argv[4]
     ProcessProj(param, int(sys.argv[3]),False)
     auxfile = param.OutputPath + param.GetParamDescription() + '_'+sys.argv[3]+'_'+param.ProjectTaskName+'.HDF'
     if os.path.exists(auxfile) == False:

@@ -7,7 +7,7 @@ from ParameterParser import *
 import multiprocessing
 
 
-
+L1FilePath = ''
 def ProviderFactory(isCreateAuxfile,resolution):
     provider = None
     if isCreateAuxfile:
@@ -48,18 +48,18 @@ def CreateStdProjProvider(resolution):
 
     Latfile = '/mnt/hgfs/Vmware Linux/Data/fygatNAV.Himawari08.xxxxxxx.000001(2000).hdf'
     Lonfile = '/mnt/hgfs/Vmware Linux/Data/fygatNAV.Himawari08.xxxxxxx.000002(2000).hdf'
-    L1file = '/mnt/hgfs/Vmware Linux/Data/AHI8_OBI_2000M_NOM_' + sys.argv[1] + '.hdf'
-    InputString = 'AHI8_OBI_2000M_NOM_' + sys.argv[1]
+    L1file = L1FilePath+'AHI8_OBI_2000M_NOM_' + sys.argv[1] + '.hdf'
+
     if resolution == 1000:
         Latfile = '/mnt/hgfs/Vmware Linux/Data/fygatNAV.Himawari08.xxxxxxx.000001.hdf'
         Lonfile = '/mnt/hgfs/Vmware Linux/Data/fygatNAV.Himawari08.xxxxxxx.000002.hdf'
-        L1file = '/mnt/hgfs/Vmware Linux/Data/AHI8_OBI_1000M_NOM_' + sys.argv[1] + '.hdf'
-        InputString = 'AHI8_OBI_1000M_NOM_' + sys.argv[1]
+        L1file = L1FilePath+'AHI8_OBI_1000M_NOM_' + sys.argv[1] + '.hdf'
+
     elif resolution == 500:
         Latfile = '/mnt/hgfs/Vmware Linux/Data/AHI8_OBI_500M_NOM_LAT.HDF'
         Lonfile = '/mnt/hgfs/Vmware Linux/Data/AHI8_OBI_500M_NOM_LON.HDF'
-        L1file = '/mnt/hgfs/Vmware Linux/Data/AHI8_OBI_0500M_NOM_' + sys.argv[1] + '.hdf'
-        InputString = 'AHI8_OBI_0500M_NOM_' + sys.argv[1]
+        L1file = L1FilePath+'AHI8_OBI_0500M_NOM_' + sys.argv[1] + '.hdf'
+
 
     provider.SetLonLatFile(Latfile,
                            Lonfile)
@@ -91,8 +91,7 @@ def ProcessAuxProj(resolution):
 
 if __name__ == '__main__':
 
-
-
+    L1FilePath = sys.argv[4]
     paramparser = ParameterParser()
     param = paramparser.parseXML('/mnt/hgfs/Vmware Linux/Data/'+sys.argv[2])
     param.OutputPath = '/mnt/hgfs/Vmware Linux/Data/'
