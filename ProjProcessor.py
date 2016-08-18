@@ -8,17 +8,19 @@ import gc
 
 class ProjProcessor(object):
 
-    __dataProvider = DataProvider()
-    __ProjTransformer = ProjTransformer()
-    __ProjParam = ProjParameters()
-    __dataOuter = DataOuter()
+    # __dataProvider = DataProvider()
 
-    __projResult = ProjResult()
+    # __ProjParam = ProjParameters()
+    # __dataOuter = DataOuter()
+
+    # __projResult = ProjResult()
 
     def __init__(self, dataprovider, dataouter, parameters):
         self.__dataProvider = dataprovider
         self.__ProjParam = parameters
         self.__dataOuter = dataouter
+        self.__ProjTransformer = ProjTransformer()
+        self.__projResult = ProjResult()
 
         if self.__ProjParam.ProjectResolution==0:
             self.__ProjParam.ProjectResolution = dataprovider.GetResolution()

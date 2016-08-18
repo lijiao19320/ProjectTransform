@@ -7,31 +7,22 @@ import ProjOutputData_module as SD
 
 
 class H8Dataprovider(DataProvider):
-    __HdfOperator = HdfOperator()
 
-
-    __HdfFileHandleList = dict()
-
-
-    __longitude = None
-    __latitude = None
-    __dataRes = 0
-    __dataWidthAndHeight= 0
-    __obsDataCount = 0
-
-
-    __BandWaveLenthList = None
-
-    __AuxiliaryDataNamesList = dict()
-
-    __description = 'NULL'
 
     def __init__(self):
         super(H8Dataprovider,self).__init__()
-        self.__AuxiliaryDataNamesList.clear()
-        self.__HdfFileHandleList.clear()
+        self.__AuxiliaryDataNamesList =dict()
+        self.__HdfFileHandleList =dict()
         self.__obsDataCount = 0
         self.__description = 'NULL'
+        self.__BandWaveLenthList = None
+
+        self.__HdfOperator = HdfOperator()
+
+        self.__longitude = None
+        self.__latitude = None
+        self.__dataRes = 0
+        self.__dataWidthAndHeight = 0
         return
 
     def Dispose(self):

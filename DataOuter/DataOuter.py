@@ -4,10 +4,11 @@ from abc import ABCMeta, abstractmethod
 
 class DataOuter(object):
 
-    __UV = []
 
-    __Parameter = None
     def __init__(self):
+        self.__UV = []
+
+        self.__Parameter = None
         return
 
     @abstractmethod

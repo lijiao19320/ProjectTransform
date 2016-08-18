@@ -15,6 +15,14 @@ class ProjParameters(object):
 
     def __init__(self):
         self.observers = []
+        self.__SrcProj = Proj(proj='latlong',ellps='WGS84')
+        self. __ProjRange = ProjRange(-90,90,-180,180)
+
+        self.OutputPath = '/'
+        self.ProjectResolution = 0
+        self.ProjectTaskName = 'Proj'
+        self.BandWaveLengthList = None
+        self.IsAuxiliaryFileMode = False
 
     def register(self, observer):
         if observer not in self.observers:
@@ -35,7 +43,7 @@ class ProjParameters(object):
         self.notify_observers()
 
 
-    __SrcProj = Proj(proj='latlong',ellps='WGS84')
+
     def setSrcProj(self,scrProj):
         self.__SrcProj = scrProj
 
@@ -58,7 +66,7 @@ class ProjParameters(object):
 
 
 
-    __ProjRange = ProjRange(-90,90,-180,180)
+
 
     def setProjRange(self,projrange):
         self.__ProjRange = projrange
@@ -66,17 +74,7 @@ class ProjParameters(object):
     def getProjRange(self):
         return  self.__ProjRange
 
-    ProjRange = property(getProjRange,setProjRange)
-
-    OutputPath = '/'
-
-    ProjectResolution = 0
-
-    ProjectTaskName = 'Proj'
-
-    BandWaveLengthList = None
-
-    IsAuxiliaryFileMode = False
+    ProjRange = property(getProjRange, setProjRange)
 
     def GetParamDescription(self):
         return  self.DstProj.srs + '_'+str(self.ProjRange.MinLat) + '-' + str(self.ProjRange.MaxLat) + '-' + str(

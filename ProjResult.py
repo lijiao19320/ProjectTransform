@@ -3,32 +3,34 @@ import ProjOutputData_module as SD
 
 class ProjResult(object):
 
-    U = None
-    V = None
 
-    ResultInfo = None
+    def __init__(self):
+        super(ProjResult,self).__init__()
+        self.U = None
+        self.V = None
 
-    LatLonRangeMask = None
+        self.ResultInfo = None
 
-    NeedUpdate = True
+        self.LatLonRangeMask = None
 
-    __DstProj = None
+        self.NeedUpdate = True
 
-    __Width = 0
-    __Height =0
-    __tv = None
-    __tu = None
-    __DataSearchTable = None
-    __IslatlongProj = False
+        self.__DstProj = None
 
-    MaxU = None
-    MinU = None
-    MaxV = None
-    MinV = None
+        self.__Width = 0
+        self.__Height = 0
+        self.__tv = None
+        self.__tu = None
+        self.__DataSearchTable = None
+        self.__IslatlongProj = False
 
-    # __latlonResRate = float(360)/float(40075.02*1000)
+        self.MaxU = None
+        self.MinU = None
+        self.MaxV = None
+        self.MinV = None
 
-    __latlonResRate = float(0.01)/float(1000)
+        self.__latlonResRate = float(0.01) / float(1000)
+        return
 
     def SetDstProj(self,dstProj):
         self.__DstProj = dstProj

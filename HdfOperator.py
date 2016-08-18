@@ -34,14 +34,22 @@ class HdfOperator(object):
 
     def WriteHdfGroupAttribute(self, fileHandle, attrName, attrValue):
         hdfgroup = fileHandle.require_group('/')
-        hdfgroup.attrs[attrName]= attrValue
+
+
+        if type(attrValue) is str:
+            hdfgroup.attrs[attrName]=  N.string_(attrValue)
+        else:
+            hdfgroup.attrs[attrName] = attrValue
         return
 
     def WriteHdfDatasetAttribute(self, fileHandle,grouppath,dataset, attrName, attrValue):
 
         hdfgroup = fileHandle[grouppath]
         dataset = hdfgroup[dataset]
-        dataset.attrs[attrName] = attrValue
+        if type(attrValue) is str:
+            hdfgroup.attrs[attrName]=  N.string_(attrValue)
+        else:
+            hdfgroup.attrs[attrName] = attrValue
         return
 
     def Close(self,hdfFile):

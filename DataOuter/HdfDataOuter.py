@@ -6,12 +6,13 @@ import gc
 
 class HdfDataOuter(DataOuter):
 
-    __HdfOperator = HdfOperator()
 
-    __dataProvider = DataProvider()
 
     def __init__(self):
         super(HdfDataOuter, self).__init__()
+        self.__HdfOperator = HdfOperator()
+
+        self.__dataProvider = DataProvider()
         return
 
     def Dispose(self):

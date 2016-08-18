@@ -19,13 +19,14 @@ class OrbitInfo(object):
 class DataProvider(object):
 
     def __init__(self):
+        self.__OrbitInfo = OrbitInfo()
+
+        self.startLine = -1
+        self.endLine = -1
+        self.__parameter = None
         return
 
-    __OrbitInfo = OrbitInfo()
 
-    startLine = -1
-    endLine  = -1
-    __parameter = None
 
 
 
