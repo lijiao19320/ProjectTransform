@@ -47,9 +47,9 @@ class HdfOperator(object):
         hdfgroup = fileHandle[grouppath]
         dataset = hdfgroup[dataset]
         if type(attrValue) is str:
-            hdfgroup.attrs[attrName]=  N.string_(attrValue)
+            dataset.attrs[attrName]=  N.string_(attrValue)
         else:
-            hdfgroup.attrs[attrName] = attrValue
+            dataset.attrs[attrName] = attrValue
         return
 
     def Close(self,hdfFile):

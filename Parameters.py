@@ -16,7 +16,7 @@ class ProjParameters(object):
     def __init__(self):
         self.observers = []
         self.__SrcProj = Proj(proj='latlong',ellps='WGS84')
-        self. __ProjRange = ProjRange(-90,90,-180,180)
+        self.__ProjRange = ProjRange(-90,90,-180,180)
 
         self.OutputPath = '/'
         self.ProjectResolution = 0
