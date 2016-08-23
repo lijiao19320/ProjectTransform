@@ -128,7 +128,7 @@ class H8Dataprovider(DataProvider):
         # path, filename = os.path.split(file)
         # self.__description = filename.upper().replace('.HDF', '')
         self.__InitOrbitInfo()
-        self.__description=self.OrbitInfo.Sat+'_'+self.OrbitInfo.Sensor+'_'+self.OrbitInfo.Date+'_'+self.OrbitInfo.Time
+        # self.__description=self.OrbitInfo.Sat+'_'+self.OrbitInfo.Sensor+'_'+self.OrbitInfo.Date+'_'+self.OrbitInfo.Time
 
 
     def SetAuxiliaryDataFile(self,LNDfile,LMKfile,DEMfile,COASTfile,SATZENfile,SATAZIfile,Lonfile,LatFile):
@@ -215,10 +215,6 @@ class H8Dataprovider(DataProvider):
     def GetOBSDataCount(self):
         return self.__obsDataCount
 
-    # def GetSensorAzimuth(self):
-    #
-    #     return self.GetDataSet(self.__DataFileHandle,'/','NOMSatelliteAzimuth')
-
 
     def GetDataSet(self,filehandle,group,ds):
 
@@ -246,21 +242,10 @@ class H8Dataprovider(DataProvider):
 
     def GetAuxiliaryDataNamesList(self):
         return self.__AuxiliaryDataNamesList
-    #
-    # def GetSensorZenith(self):
-    #     return self.GetDataSet(self.__DataFileHandle,'/','NOMSatelliteZenith')
-    #
-    # def GetSolarAzimuth(self):
-    #     return self.GetDataSet(self.__DataFileHandle,'/','NOMSunAzimuth')
-    #
-    # def GetSolarZenith(self):
-    #     return self.GetDataSet(self.__DataFileHandle,'/','NOMSunZenith')
 
-    # def GetEmissData(self, band):
-    #     return
 
-    # def SetDataDescription(self, value):
-    #     self.__description = value
+    def SetDataDescription(self, value):
+        self.__description = value
 
     def GetDataDescription(self):
         if self.__description == 'NULL':

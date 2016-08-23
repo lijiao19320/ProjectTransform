@@ -67,7 +67,7 @@ def CreateStdProjProvider(resolution):
 
     print sys.argv[1]
     provider.SetL1File(L1file)
-
+    provider.SetDataDescription('Himawari8_OBI_'+sys.argv[1])
     return  provider
 
 def ProcessProj(param,reslution,isCreateAuxfile):
@@ -83,7 +83,7 @@ def ProcessProj(param,reslution,isCreateAuxfile):
 def ProcessAuxProj(resolution):
     paramparser = ParameterParser()
     auxparam = paramparser.parseXML(sys.argv[2])
-    auxparam.OutputPath = '/FY4COMM/FY4A/L2/AGRIX/PRJ/'
+    auxparam.OutputPath = '/FY4COMM/FY4A/COM/PRJ/'
     auxparam.ProjectResolution = resolution
     auxparam.IsAuxiliaryFileMode = True
     ProcessProj(auxparam, resolution, True)
@@ -106,7 +106,7 @@ if __name__ == '__main__':
     # p2.start()
     L1FilePath = sys.argv[4]
     ProcessProj(param, int(sys.argv[3]),False)
-    auxfile = param.OutputPath + param.GetParamDescription() + '_'+sys.argv[3]+'_'+param.ProjectTaskName+'.HDF'
+    auxfile = '/FY4COMM/FY4A/COM/PRJ/'+ param.GetParamDescription() + '_'+sys.argv[3]+'_'+param.ProjectTaskName+'.HDF'
     if os.path.exists(auxfile) == False:
         ProcessAuxProj(int(sys.argv[3]))
 
