@@ -226,6 +226,7 @@ class H8Dataprovider(DataProvider):
             ret = data[startLine:endlLine, :]
         else:
             ret = data[:,:]
+
         return ret
 
     def GetAuxiliaryData(self,dataname):
