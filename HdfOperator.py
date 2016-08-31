@@ -2,20 +2,24 @@ import h5py
 import os
 import os.path
 import numpy as N
+from pyhdf.SD import SD, SDC
 
 class HdfOperator(object):
 
 
 
     def Open(self,filePath):
-        return h5py.File(filePath, 'a')
+        if 'MOD' in filePath:
+            return SD(filePath, SDC.READ)
+        else:
+            return h5py.File(filePath, 'a')
 
     def ReadHdfDataset(self,fileHandle,groupPath,datasetPath):
         dataset = N.zeros((1,1,1))
         if (groupPath in fileHandle.keys()) or groupPath == '/':
             hdfgroup = fileHandle[groupPath]
-            if datasetPath in hdfgroup.keys():
-                dataset = hdfgroup[datasetPath]
+            # if datasetPath in hdfgroup.keys():
+            dataset = hdfgroup[datasetPath]
         return dataset
 
     def ReadHdfAttri(self,fileHandle,groupPath,attrName):
